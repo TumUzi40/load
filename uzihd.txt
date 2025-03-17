@@ -1,5 +1,5 @@
 {
-"name": "ServerAV2",
+"name": "HD_จังบักสัง,
 "author": "ឃៀនជុកណូយ",
 "image": "http://116.204.180.87:82/img/18photo.jpg",
 "url": "http://116.204.180.87:82/samuza/avxserver2.txt",
