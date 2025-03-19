@@ -1,0 +1,89 @@
+{
+"name": "HD_จังบักสัง,
+"author": "ឃៀនជុកណូយ",
+"image": "http://116.204.180.87:82/img/18photo.jpg",
+"url": "https://raw.githubusercontent.com/TumUzi40/iphd/refs/heads/main/u3home.txt",
+"groups": [
+
+{
+"name": "กด Refresh",
+"image": "http://116.204.180.87:82/img/Updated1.png",
+"url": "https://raw.githubusercontent.com/TumUzi40/iphd/refs/heads/main/u3home.txt",
+"info": "refers",
+"import": true
+},
+
+
+{
+"name": "ALL",
+"image": "http://116.204.180.87:82/IMG/cat_ic3.gif",
+"url": "http://116.204.180.87:82/samuza/like/liveHDR.txt",
+"import": "true"
+
+},
+
+
+{
+"name": "Live_HD",
+"image": "",
+"url": "http://116.204.180.87:82/samuza/new/linehd.txt",
+"import": "true"
+
+},
+
+
+
+{
+"name": "INTER_HD",
+"image": "http://116.204.180.87:82/IMG/cat5.gif",
+"url": "http://116.204.180.87:82/samuza/new/hd1av.txt",
+"import": "true"
+
+},
+
+{
+"name": "AV_SUB_HD",
+"image": "http://116.204.180.87:82/IMG/cat6.gif",
+"url": "http://116.204.180.87:82/samuza/new/7Adult.w3u",
+"import": "true"
+},
+
+{
+"name": "MIX_AV",
+"image": "http://116.204.180.87:82/IMG/cat5.gif",
+"url": "http://116.204.180.87:82/samuza/new/9sexy1.w3u",
+"import": "true"
+
+},
+
+{
+"name": "server x5",
+"image": "",
+"url": "http://116.204.180.87:82/samuza/u3u13.txt",
+"import": "true"
+
+},
+
+{
+"name": "server x6",
+"image": "http://116.204.180.87:82/IMG/cat5.gif",
+"url": "https://pastebin.com/V0K9wj7d",
+"import": "true"
+
+},
+
+{
+"name": "server x7",
+"image": "http://116.204.180.87:82/IMG/cat5.gif",
+"url": "http://116.204.180.87:82/samuza/new/av24flix.txt",
+"import": "true"
+
+},
+
+
+
+
+
+
+]
+}
