@@ -1,0 +1,482 @@
+<!DOCTYPE html><html lang="th">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>ดูทีวีออนไลน์ ฟรี ทุกช่อง | KicksBall</title>
+   <!-- 🔥 นำเข้า Firebase SDK เวอร์ชัน 9+ -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+  import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+
+  // ==============================================
+  // ⚙️ ใส่ข้อมูล Firebase ของคุณตรงนี้ครับ
+  // ==============================================
+const firebaseConfig = {
+  apiKey: "AIzaSyAO_w4grQ8ljTWBhTKeH5lR_YCGaDG8eBw",
+  authDomain: "coffee-spark-ai-barista-ceb7e.firebaseapp.com",
+  projectId: "coffee-spark-ai-barista-ceb7e",
+  storageBucket: "coffee-spark-ai-barista-ceb7e.firebasestorage.app",
+  messagingSenderId: "921765732549",
+  appId: "1:921765732549:web:f4a748d34a0d1abe9390ac"
+};
+
+  // เริ่มต้นใช้งาน Firebase
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+
+  // ให้ฟังก์ชันอื่นๆ เข้าถึงได้
+  window.firebaseDB = { db, ref, onValue, set };
+</script>
+    <meta name="description" content="ดูทีวีออนไลน์ฟรี ช่องกีฬา ข่าว บันเทิง และบอลสด ครบทุกช่อง ที่ KicksBall">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="">
+    
+    <meta property="og:site_name" content="KicksBall">
+    <meta property="og:title" content="ดูทีวีออนไลน์ ฟรี ทุกช่อง | KicksBall">
+    <meta property="og:description" content="ดูทีวีออนไลน์ฟรี ช่องกีฬา ข่าว บันเทิง และบอลสด ครบทุกช่อง ที่ KicksBall">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="">        
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="ดูทีวีออนไลน์ ฟรี ทุกช่อง | KicksBall">
+    <meta name="twitter:description" content="ดูทีวีออนไลน์ฟรี ช่องกีฬา ข่าว บันเทิง และบอลสด ครบทุกช่อง ที่ KicksBall">
+
+    <link rel="icon" href="https://kicksball.com/assets/img/favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com/">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800;900&amp;display=swap">
+    <link rel="preload" href="https://kicksball.com/assets/css/style.css" as="style">
+    <link rel="stylesheet" href="https://kicksball.com/assets/css/style.css">
+    
+    <style>
+      /* ===== ปรับปรุงเมนูให้ลิงก์ทำงานได้ ===== */
+      @media (max-width: 78px) {
+        .main-nav {
+          position: fixed;
+          top: 0;
+          right: 0;
+          height: 100vh;
+          width: 70px;
+          background: #fff;
+          box-shadow: -2px 0 10px rgba(0,0,0,0.15);
+          transform: translateX(100%);
+          transition: transform 0.3s ease;
+          z-index: 999;
+          padding: 2rem 1.5rem;
+          display: flex;
+          flex-direction: column;
+          gap: 0;
+        }
+        .main-nav.active {
+          transform: translateX(0);
+        }
+        /* ✅ สำคัญ: ให้ลิงก์คลิกได้ ปกติ */
+        .main-nav a {
+          padding: 14px 16px;
+          color: #333;
+          text-decoration: none;
+          font-size: 16px;
+          border-bottom: 1px solid #f0f0f0;
+          cursor: pointer;
+          pointer-events: auto !important; /* ✅ บังคับให้คลิกได้ */
+          position: relative;
+          z-index: 1001; /* ✅ อยู่บนสุด ไม่มีอะไรทับ */
+          display: block;
+          width: 50%;
+          box-sizing: border-box;
+        }
+        .main-nav a:hover {
+          background: #f5f5f5;
+          color: #007bff;
+        }
+        .main-nav a.active {
+          color: #007bff;
+          font-weight: 600;
+          background: #eef5ff;
+        }
+        .nav-toggle {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+          background: none;
+          border: none;
+          cursor: pointer;
+          z-index: 1002;
+          padding: 8px;
+        }
+        .nav-toggle span {
+          width: 24px;
+          height: 2px;
+          background: #000;
+          border-radius: 2px;
+          transition: all 0.25s ease;
+          pointer-events: none;
+        }
+        .nav-toggle.active span:nth-child(1) {
+          transform: rotate(45deg) translate(5px, 5px);
+        }
+        .nav-toggle.active span:nth-child(2) {
+          opacity: 0;
+        }
+        .nav-toggle.active span:nth-child(3) {
+          transform: rotate(-45deg) translate(5px, -5px);
+        }
+        .nav-overlay {
+          position: fixed;
+          inset: 0;
+          background: rgba(0,0,0,0.4);
+          opacity: 0;
+          visibility: hidden;
+          transition: all 0.3s ease;
+          z-index: 998;
+        }
+        .nav-overlay.active {
+          opacity: 1;
+          visibility: visible;
+        }
+      }
+      @media (min-width: 769px) {
+        .nav-toggle { display: none; }
+        .main-nav a {
+          pointer-events: auto !important;
+          cursor: pointer;
+        }
+      }
+      /* ป้องกันการทับซ้อนขององค์ประกอบอื่น */
+      .site-header { position: relative; z-index: 50; }
+      .header-inner { position: relative; }
+    </style>
+</head>
+    
+<body data-base="">
+
+  <div class="nav-overlay" data-nav-overlay="active"></div>
+
+<header class="site-header">
+    <div class="container header-inner">
+                <a class="brand" href="intent://kicksball.com/tv#Intent;scheme=https;type=video/*;package=com.mycompany.app.soulbrowser;end" target="_blank">
+            <img src="https://kicksball.com/assets/img/logo.png" alt="KicksBall" class="brand-logo" width="56" height="40">
+        </a>
+         <a class="brand" href="intent://madoball.com/channels#Intent;scheme=https;type=video/*;package=com.mycompany.app.soulbrowser;end" target="_blank">
+            <img src="https://cdn2.madoball.com/upload/1782661225474.webp" alt="KicksBall" class="brand-logo" width="56" height="40">
+        </a>
+                 <a class="brand" href="intent://movie911hd.com/movie-2026#Intent;scheme=https;type=video/*;package=com.mycompany.app.soulbrowser;end" target="_blank">
+            <img src="https://movie911hd.com/wp-content/uploads/2026/04/movie911hd-1.png" alt="KicksBall" class="brand-logo" width="56" height="40">
+        </a>
+
+
+
+        <button class="nav-toggle" aria-label="เมนู" data-nav-toggle="">
+            <span></span><span></span><span></span>
+        </button>
+
+        </nav>
+        
+        <nav class="main-nav" data-nav="">
+            <!-- ✅ เพิ่ม target="_top" และตรวจสอบลิงก์ -->
+            <a href="" target="_top" class="">หน้าแรก</a>
+            <a href="https://sugus25.github.io/IPTV-THAI/" target="_blank">บอลสด1</a>
+            <a href="" target="_top">โปรแกรมบอล</a>
+            <a href="https://sugus25.github.io/djton_streane_live/" target="_top">ผลบอล</a>
+        <a href="https://sugus25.github.io/djton_streane_live/" target="_top" class="active">ดูทีวี</a>
+            <a href="https://ubet89.news/app?openExternalBrowser=1#/home" target="_top" class="">ubet89</a>
+        </nav>
+    </div>
+</header>
+
+
+<main id="main">
+    <div class="container">
+    <div class="page-head">
+        <h1 class="page-title">📺ต้น ูทีวีออนไลน์</h1>
+        <span class="muted">282 ช่อง</span>
+    </div>
+
+    <div class="tv-cats">
+        <a class="cat-chip active" href="/storage/emulated/0/Plublic/KICKSBALL/คิกบอล.html">KICKSBALL</a>
+        <a class="cat-chip" href="https://sugus25.github.io/iptvweb/" target="_self">เครื่องเล่นiPtv</a>
+        <a class="cat-chip" href="https://sugus25.github.io/m3u8-xtream-playlist/" target="_self">xtream-playlist</a>
+        <a class="cat-chip" href="https://sugus320.github.io/sugus320tv/" target="_self">sugus320tv</a>
+        <a class="cat-chip" href="">บันเทิง</a>
+        <a class="cat-chip" href="https://github.com/" target="_self">github</a>
+    </div>
+
+       <section class="tv-section">
+                <h2 class="section-title">ข่าว</h2>
+                <div class="tv-grid">
+                                            <a class="tv-card" href="" target="_top">
+                            <span class="tv-logo-wrap">
+                                <img src="https://ubet89.news/ubet89/assets/images/branch/ubet89/icon/AnyConv.com__Ubet89%20%E0%B9%81%E0%B8%99%E0%B8%A7%E0%B8%99%E0%B8%AD%E0%B8%99.webp" loading="lazy" width="80" height="80">
+                                <span class="tv-play">▶</span>
+                            </span>
+                <span class="tv-name">UBET89</span>
+                        </a>
+                                            <a class="tv-card" href="https://www.dola.com/chat/" target="_self">
+                            <span class="tv-logo-wrap">
+                                <img src="https://play-lh.googleusercontent.com/SJ_fxAD83ZvU8RIdWXaq2K1GbVRSyvtyk9CKoApZdMVOpFClBjqodpbeTjFXGCiFT4ikjAszMj8iKxpeqOk5AA=s0-br30" loading="lazy" width="80" height="80">
+                                <span class="tv-play">▶</span>
+                            </span>
+                            <span class="tv-name">DOLLA</span>
+                        </a>
+                 
+                     <a class="tv-card" href="https://www.6thwin.com/m/index.html" data-disable-mlink="true" target="_self">
+                            <span class="tv-logo-wrap">
+                                <img src="https://www.6thwin.com/m/logo.b4d04e45.png" alt="สำรวจโลก" loading="lazy" width="80" height="80">
+                                <span class="tv-play">▶</span>
+                            </span>
+                            <span class="tv-name">THWIN</span>
+                        </a>
+                              
+                                           <a class="tv-card" href="https://www.jokerzone68.com/list-games" data-disable-mlink="true" target="_self">
+                            <span class="tv-logo-wrap">
+                                <img src="https://dl.zhenwudadi.net/images/web/assets/v.1.22/themes/jk/mobile/assets/images/logo-app.png" alt="สำรวจโลก" loading="lazy" width="80" height="80">
+                                <span class="tv-play">▶</span>
+                            </span>
+                            <span class="tv-name">JOKER GAMING</span>
+                        </a>
+                                         <a class="tv-card" href="https://www.thb44.vip/" data-disable-mlink="true" target="_self">
+                            <span class="tv-logo-wrap">
+                                <img src="https://media.licdn.com/dms/image/v2/D4E0BAQHitrioMkY58g/company-logo_200_200/B4EZ4HxG6FG8AI-/0/1778246774857/em99_technologies_logo?e=2147483647&v=beta&t=2n3bdAA_fSosKnkLGra1dhYkJkafZ11KMnbtuC3ogsU" alt="สำรวจโลก" loading="lazy" width="80" height="80">
+                                <span class="tv-play">▶</span>
+                            </span>
+                            <span class="tv-name">EM99</span>
+                        </a>
+                                     <a class="tv-card" href="https://www.thb68.vip/" data-disable-mlink="true" target="_self">
+                            <span class="tv-logo-wrap">
+                                <img src="https://cdn.stillsunday.pl/thb168_1.jpg" alt="สำรวจโลก" loading="lazy" width="80" height="80">
+                                <span class="tv-play">▶</span>
+                            </span>
+                            <span class="tv-name">THB168</span>
+                        </a>
+        
+        
+         <a class="tv-card" href="https://www.ib888v6.com/" data-disable-mlink="true" target="_self">
+                            <span class="tv-logo-wrap">
+                                <img src="https://www.ib888v6.com/LOGO/ib888-logo-slot-credit-free.jpg" alt="IB88" loading="lazy" width="80" height="80">
+                                <span class="tv-play">▶</span>
+                            </span>
+                            <span class="tv-name">IB88</span>
+                        </a>
+
+
+                                                   <a class="tv-card" href="https://sugus25.github.io/webapptv/" data-disable-mlink="true" target="_self">
+                            <span class="tv-logo-wrap">
+                                <img src="https://play-lh.googleusercontent.com/W0K0RJvyfoQw9Y908HrwdAgLa2wdDhj0hs7PK6ycrsikXMArzdV2J0xdPN5BJSp8iqc_8C6IJqmaN_N5Po-x" alt="สำรวจโลก" loading="lazy" width="80" height="80">
+                                <span class="tv-play">▶</span>
+                            </span>
+                            <span class="tv-name">webapptv</span>
+                        </a>
+            
+                <a class="tv-card" href="https://www.facebook.com/&amp;action=app_android" data-disable-mlink="true" target="_self">
+                            <span class="tv-logo-wrap">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/e/ee/Logo_de_Facebook.png?utm_source=commons.wikimedia.org&amp;utm_campaign=index&amp;utm_content=original" alt="สำรวจโลก" loading="lazy" width="80" height="80">
+                                <span class="tv-play">▶</span>
+                            </span>
+                            <span class="tv-name">FACEBOOK</span>
+                        </a>
+      <a class="tv-card" href="intent://cdn2.stream.atmflix.live/atmflixlive/samrujlok/chunks.m3u8|referer=https://atmflix.live/#Intent;package=com.pecana.iptvextreme;S.userAgent=exo_player;S.title=Live%20Program;S.referer=;scheme=https;type=video/mp4;end" data-disable-mlink="true" target="_self">
+                            <span class="tv-logo-wrap">
+                                <img src="https://madoball.com/upload/563.jpg" alt="สำรวจโลก" loading="lazy" width="80" height="80">
+                      
+                                <span class="tv-play">▶</span>
+                            </span>
+                            <span class="tv-name">สำรวจโลก</span>
+                        </a>
+                        
+     <a class="tv-card" href="javascript:showPlayerMenu('cdn2.stream.atmflix.live/atmflixlive/animalshow/chunks.m3u8', 'สำรวจโลก', 'https://atmflix.live/');">
+  <span class="tv-logo-wrap">
+    <img src="https://madoball.com/upload/563.jpg" alt="สำรวจโลก" loading="lazy" width="80" height="80">
+    <span class="tv-play">▶</span>
+  </span>
+  <span class="tv-name">สำรวจโลก</span>
+</a>
+
+                    
+      <a class="tv-card" href="intent://cdn2.stream.atmflix.live/atmflixlive/samrujlok/playlist.m3u8|referer=https://atmflix.live/#Intent;scheme=https;category=android.intent.category.BROWSABLE;type=application/vnd.apple.mpegurl;launchFlags=0x17000000;package=com.pecana.iptvextreme;S.com.android.browser.application_id=com.android.chrome;end" data-disable-mlink="true" target="_self">
+                            <span class="tv-logo-wrap">
+                                <img src="https://kicksball.com/img/proxy?u=https%3A%2F%2Fliveplayback.net%2Fuploads%2F1720723122.png&s=5711fcf77486" alt="สำรวจโลก" loading="lazy" width="80" height="80">
+                                <span class="tv-play">▶</span>
+                            </span>
+                            <span class="tv-name">ANIMAL SHOW</span>
+                        </a>
+                        
+                        
+                        
+               </a>
+      <a class="tv-card" href="intent://master.streamhls.com/hls/ab70e85898bea0a1a3a4d502a73c3114/master#Intent;package=com.mxtech.videoplayer.ad;S.userAgent=exo_player;S.title=Live%20Program;S.referer=;scheme=https;type=video/mp4;end" data-disable-mlink="true" target="_self">
+                            <span class="tv-logo-wrap">
+                                <img src="https://www.v8-hdmovie.com/wp-content/uploads/2026/08/Mutiny_2026-1.jpg" alt="สำรวจโลก" loading="lazy" width="80" height="80">
+                                <span class="tv-play">▶</span>
+                            </span>
+                            <span class="tv-name">คนระห่ำต้องรอด</span>
+                        </a>
+             <a class="tv-card" href="intent://www.123-hdx.com/#Intent;scheme=https;type=video/*;package=com.mycompany.app.soulbrowser;end" data-disable-mlink="true" target="_self">
+                            <span class="tv-logo-wrap">
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRW05HGLCxGWznAYYaF3YLCRgfYvV4AQpWARUl8Is4EfHiGqX4PYL1dIhA&s=10" alt="สำรวจโลก" loading="lazy" width="80" height="80">
+                                <span class="tv-play">▶</span>
+                            </span>
+                            <span class="tv-name">123-HDX</span>
+                        </a>
+          <a class="tv-card" href="intent://9nung.net#Intent;scheme=https;type=video/*;package=com.mycompany.app.soulbrowser;end" data-disable-mlink="true" target="_self">
+                            <span class="tv-logo-wrap">
+                                <img src="https://9nung.net/wp-content/uploads/2026/08/cropped-1.png" alt="สำรวจโลก" loading="lazy" width="80" height="80">
+                                <span class="tv-play">▶</span>
+                            </span>
+                            <span class="tv-name">9หนัง</span>
+                        </a>
+         <a class="tv-card" href="intent://dooflixlive.com/tv/#Intent;scheme=https;type=video/*;package=com.mycompany.app.soulbrowser;end" data-disable-mlink="true" target="_self">
+                            <span class="tv-logo-wrap">
+                                <img src="https://dooflixtv.online/wp-content/uploads/2025/06/dooflixty-logo.webp" alt="สำรวจโลก" loading="lazy" width="80" height="80">
+                                <span class="tv-play">▶</span>
+                            </span>
+                            <span class="tv-name">DOOFLIX-TV</span>
+                        </a>
+                        
+
+
+
+
+
+
+
+
+
+
+
+                                    </div>
+            </section>
+            
+    </div>
+</main>
+
+<footer class="site-footer">
+    <div class="container footer-inner">
+        <div class="footer-brand">
+            <div class="brand-name">KicksBall</div>
+            <p class="muted">ดูบอลสด ตารางบอล ไฮไลท์ ครบจบในที่เดียว</p>
+        </div>
+        <nav class="footer-links">
+            <a href="https://coffee-spark-ai-barista-ceb7e.web.app/" target="_top">หน้าแรก</a>
+            <a href="https://kicksball.com/?tab=upcoming" target="_top">โปรแกรมบอล</a>
+            <a href="https://sugus25.github.io/IPTV-THAI/" target="_top">ดูทีวี</a>
+            <a href="" target="_top">ข่าวบอล</a>
+        </nav>
+            </div>
+    <div class="footer-bottom">
+        <div class="container">
+            <p class="muted">© 2026 KicksBall — เว็บนำเสนอข้อมูลและลิงก์ถ่ายทอดสดเพื่อความบันเทิงเท่านั้น</p>
+        </div>
+    </div>
+</footer>
+
+<div id="playerMenuOverlay" onclick="hidePlayerMenu()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:998;"></div>
+<div id="playerMenu" style="display:none;position:fixed;bottom:0;left:0;right:0;background:#fff;border-radius:16px 16px 0 0;padding:20px;z-index:999;max-height:60vh;overflow-y:auto;">
+  <h4 style="margin:0 0 16px 0;text-align:center;">🎬 เลือกเครื่องเล่น</h4>
+  <div style="display:flex;flex-direction:column;gap:10px;">
+    <a id="pl-iptvextreme" class="btn-player-menu" style="padding:14px;background:#f0f4ff;border-radius:10px;text-align:center;text-decoration:none;color:#2563eb;font-weight:500;">📺 IPTV Extreme</a>
+    <a id="pl-vlc" class="btn-player-menu" style="padding:14px;background:#f0fdf4;border-radius:10px;text-align:center;text-decoration:none;color:#16a34a;font-weight:500;">🎬 VLC Media Player</a>
+    <a id="pl-yamby" class="btn-player-menu" style="padding:14px;background:#fef3c7;border-radius:10px;text-align:center;text-decoration:none;color:#d97706;font-weight:500;">📱 Yamby</a>
+    <a id="pl-drm" class="btn-player-menu" style="padding:14px;background:#fce7f3;border-radius:10px;text-align:center;text-decoration:none;color:#db2777;font-weight:500;">🔐 DRM Player</a>
+    <a id="pl-mx" class="btn-player-menu" style="padding:14px;background:#ede9fe;border-radius:10px;text-align:center;text-decoration:none;color:#7c3aed;font-weight:500;">🎞️ MX Player</a>
+  </div>
+  <button onclick="hidePlayerMenu()" style="width:100%;margin-top:16px;padding:12px;background:#f3f4f6;border:none;border-radius:10px;cursor:pointer;font-size:15px;">ปิด</button>
+</div>
+
+<script>
+let currentStream = '';
+let currentTitle = '';
+let currentReferer = '';
+
+// แสดงเมนูเลือกเครื่องเล่น
+function showPlayerMenu(streamUrl, title, refererUrl) {
+  currentStream = streamUrl;
+  currentTitle = title;
+  currentReferer = refererUrl;
+  document.getElementById('playerMenuOverlay').style.display = 'block';
+  document.getElementById('playerMenu').style.display = 'block';
+  document.body.style.overflow = 'hidden';
+}
+
+// ซ่อนเมนู
+function hidePlayerMenu() {
+  document.getElementById('playerMenuOverlay').style.display = 'none';
+  document.getElementById('playerMenu').style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+
+
+// เปิดแต่ละแอปเมื่อเลือก
+document.addEventListener('DOMContentLoaded', function() {
+  // 1. IPTV Extreme
+  document.getElementById('pl-iptvextreme').addEventListener('click', function(e) {
+    e.preventDefault();
+        const intent = `intent://${currentStream}#Intent;package=com.pecana.iptvextreme;type=video/*;end`;
+    window.location.href = intent;
+    hidePlayerMenu();
+  });
+
+  // 2. VLC
+  document.getElementById('pl-vlc').addEventListener('click', function(e) {
+    e.preventDefault();
+    const intent = `intent://${currentStream}#Intent;package=com.hush.yamby;type=video/*;end`;
+    window.location.href = intent;
+    hidePlayerMenu();
+  });
+
+  // 3. Yamby
+  document.getElementById('pl-yamby').addEventListener('click', function(e) {
+    e.preventDefault();
+    const intent = `intent://${currentStream}#Intent;package=com.hush.yamby;S.title=${encodeURIComponent(currentTitle)};S.referer=${currentReferer};scheme=https;end`;
+    window.location.href = intent;
+    hidePlayerMenu();
+  });
+
+  // 4. DRM Player
+  document.getElementById('pl-drm').addEventListener('click', function(e) {
+    e.preventDefault();
+    const intent = `intent://${currentStream}#Intent;package=org.drm.player;type=video/*;end`;
+    window.location.href = intent;
+    hidePlayerMenu();
+  });
+
+  // 5. MX Player
+  document.getElementById('pl-mx').addEventListener('click', function(e) {
+    e.preventDefault();
+    const intent = `intent://${currentStream}#Intent;package=com.mxtech.videoplayer.ad;type=video/*;end`;
+    window.location.href = intent;
+    hidePlayerMenu();
+  });
+});
+</script>
+
+
+
+<script>
+  const navToggle = document.querySelector('[data-nav-toggle]');
+  const nav = document.querySelector('[data-nav]');
+  const overlay = document.querySelector('[data-nav-overlay]');
+  const navLinks = nav.querySelectorAll('a');
+
+  function toggleMenu() {
+    navToggle.classList.toggle('active');
+    nav.classList.toggle('active');
+    overlay.classList.toggle('active');
+    document.body.style.overflow = nav.classList.contains('active') ? 'hidden' : '';
+  }
+
+  navToggle.addEventListener('click', toggleMenu);
+  overlay.addEventListener('click', toggleMenu);
+
+  // ✅ ปรับปรุง: ปิดเมนู + เปิดลิงก์
+  navLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+      // ปิดเมนูก่อนเปลี่ยนหน้า
+      if (nav.classList.contains('active')) {
+        toggleMenu();
+      }
+      // ✅ ไม่ปิดกั้นการทำงานของลิงก์
+      // ไม่ใช้ e.preventDefault() ❌
+    });
+  });
+</script>
+
+</body></html>
