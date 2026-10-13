@@ -2,213 +2,504 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NON Video Player</title>
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Video Player</title>
 
-    body {
-      margin: 0;
-      padding: 20px;
-      background: #111;
-      color: white;
-      font-family: Arial, sans-serif;
-    }
+<style>
+* {
+  box-sizing: border-box;
+}
 
-    .container {
-      max-width: 900px;
-      margin: 30px auto;
-    }
+body {
+  margin: 0;
+  padding: 16px;
+  background: #f1f1f1;
+  color: #111;
+  font-family: Arial, sans-serif;
+}
 
-    h2 {
-      text-align: center;
-      margin-bottom: 20px;
-    }
+.container {
+  width: 100%;
+  max-width: 900px;
+  margin: 20px auto;
+}
 
-    .player {
-      background: #000;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 8px 30px #0008;
-    }
+.header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+}
 
-    video {
-      display: block;
-      width: 100%;
-      max-height: 75vh;
-      background: #000;
-    }
+.logo {
+  background: #ff0000;
+  color: white;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-weight: bold;
+}
 
-    .controls {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 12px;
-      padding: 15px;
-      background: #222;
-    }
+.header h2 {
+  margin: 0;
+  font-size: 21px;
+}
 
-    button {
-      padding: 10px 16px;
-      border: none;
-      border-radius: 6px;
-      background: #e50914;
-      color: white;
-      cursor: pointer;
-      font-size: 15px;
-    }
+.url-box {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+}
 
-    button:hover {
-      background: #b20710;
-    }
+.url-box input {
+  min-width: 0;
+  flex: 1;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 15px;
+}
 
-    input[type="range"] {
-      accent-color: #e50914;
-      cursor: pointer;
-    }
+button {
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+}
 
-    #progress {
-      flex: 1;
-      min-width: 100px;
-    }
+.load-btn {
+  padding: 12px 18px;
+  background: #ff0000;
+  color: white;
+  border-radius: 8px;
+  font-weight: bold;
+}
 
-    #volume {
-      width: 80px;
-    }
+.load-btn:hover {
+  background: #cc0000;
+}
 
-    .time {
-      font-size: 13px;
-      color: #ddd;
-    }
+.player {
+  background: #000;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px #0002;
+}
 
-    .file-input {
-      margin-top: 18px;
-      padding: 12px;
-      width: 100%;
-      background: #222;
-      border-radius: 8px;
-    }
-  </style>
+.video-area {
+  position: relative;
+  background: #000;
+  aspect-ratio: 16 / 9;
+}
+
+video {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+  background: #000;
+}
+
+.controls {
+  padding: 10px 14px 12px;
+  color: white;
+  background: #181818;
+}
+
+.progress {
+  width: 100%;
+  height: 5px;
+  margin: 0 0 12px;
+  display: block;
+  accent-color: #ff0000;
+  cursor: pointer;
+}
+
+.control-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.control-btn {
+  background: transparent;
+  color: white;
+  padding: 6px 3px;
+  font-size: 18px;
+}
+
+.control-btn:hover {
+  color: #ff5252;
+}
+
+.time {
+  font-size: 12px;
+  color: #ddd;
+  white-space: nowrap;
+}
+
+.volume {
+  width: 75px;
+  accent-color: #ff0000;
+}
+
+.speed {
+  background: #333;
+  color: white;
+  padding: 7px;
+  border-radius: 5px;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.message {
+  font-size: 13px;
+  color: #555;
+  margin-top: 12px;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 480px) {
+  body {
+    padding: 8px;
+  }
+
+  .container {
+    margin-top: 10px;
+  }
+
+  .header h2 {
+    font-size: 18px;
+  }
+
+  .url-box {
+    flex-direction: column;
+  }
+
+  .load-btn {
+    width: 100%;
+  }
+
+  .controls {
+    padding: 8px;
+  }
+
+  .control-row {
+    gap: 8px;
+  }
+
+  .volume {
+    width: 55px;
+  }
+
+  .control-btn {
+    font-size: 16px;
+  }
+}
+</style>
 </head>
+
 <body>
 
 <div class="container">
-  <h2>NON VIDEO PLAYER</h2>
 
-  <div class="player">
-    <video id="video" playsinline>
-      <source src="video.mp4" type="video/mp4">
-      non
-    </video>
+  <div class="header">
+    <span class="logo">▶ VIDEO</span>
+    <h2>My Video Player</h2>
+  </div>
+
+  <div class="url-box">
+    <input
+      id="videoURL"
+      type="url"
+      placeholder="วาง URL วิดีโอ MP4 หรือ WebM"
+      aria-label="URL วิดีโอ"
+    >
+    <button class="load-btn" id="loadBtn">
+      โหลดวิดีโอ
+    </button>
+  </div>
+
+  <div class="player" id="player">
+
+    <div class="video-area">
+      <video
+        id="video"
+        playsinline
+        preload="metadata"
+        controlslist="nodownload"
+      >
+        เบราว์เซอร์ของคุณไม่รองรับวิดีโอ
+      </video>
+    </div>
 
     <div class="controls">
-      <button id="playBtn">▶ เล่น</button>
 
-      <span class="time" id="current">00:00</span>
+      <input
+        class="progress"
+        id="progress"
+        type="range"
+        min="0"
+        max="1000"
+        value="0"
+        step="1"
+        aria-label="ตำแหน่งวิดีโอ"
+      >
 
-      <input type="range" id="progress"
-             min="0" max="100" value="0"
-             aria-label="ตำแหน่งวิดีโอ">
+      <div class="control-row">
 
-      <span class="time" id="duration">00:00</span>
+        <button
+          class="control-btn"
+          id="playBtn"
+          aria-label="เล่นวิดีโอ"
+          title="เล่น/หยุด"
+        >▶</button>
 
-      <button id="muteBtn">🔊</button>
+        <button
+          class="control-btn"
+          id="backBtn"
+          title="ย้อนกลับ 10 วินาที"
+          aria-label="ย้อนกลับ"
+        >↶10</button>
 
-      <input type="range" id="volume"
-             min="0" max="1" step="0.1"
-             value="1" aria-label="ระดับเสียง">
+        <button
+          class="control-btn"
+          id="forwardBtn"
+          title="ข้ามไป 10 วินาที"
+          aria-label="ข้ามไปข้างหน้า"
+        >10↷</button>
 
-      <button id="fullBtn">⛶ เต็มจอ</button>
+        <span class="time" id="time">00:00 / 00:00</span>
+
+        <span class="spacer"></span>
+
+        <button
+          class="control-btn"
+          id="muteBtn"
+          title="ปิด/เปิดเสียง"
+          aria-label="ปิดเสียง"
+        >🔊</button>
+
+        <input
+          class="volume"
+          id="volume"
+          type="range"
+          min="0"
+          max="1"
+          step="0.05"
+          value="1"
+          aria-label="ระดับเสียง"
+        >
+
+        <select class="speed" id="speed"
+                aria-label="ความเร็วการเล่น">
+          <option value="0.5">0.5x</option>
+          <option value="0.75">0.75x</option>
+          <option value="1" selected>1x</option>
+          <option value="1.25">1.25x</option>
+          <option value="1.5">1.5x</option>
+          <option value="2">2x</option>
+        </select>
+
+        <button
+          class="control-btn"
+          id="fullBtn"
+          title="เต็มหน้าจอ"
+          aria-label="เต็มหน้าจอ"
+        >⛶</button>
+
+      </div>
     </div>
   </div>
 
-  <input class="file-input" type="file"
-         id="fileInput" accept="video/*">
+  <p class="message" id="message">
+    วาง URL วิดีโอด้านบน แล้วกดโหลดวิดีโอ
+  </p>
 
 </div>
 
 <script>
-  const video = document.getElementById("video");
-  const playBtn = document.getElementById("playBtn");
-  const progress = document.getElementById("progress");
-  const current = document.getElementById("current");
-  const duration = document.getElementById("duration");
-  const volume = document.getElementById("volume");
-  const muteBtn = document.getElementById("muteBtn");
+const video = document.getElementById("video");
+const player = document.getElementById("player");
+const urlInput = document.getElementById("videoURL");
+const loadBtn = document.getElementById("loadBtn");
+const playBtn = document.getElementById("playBtn");
+const progress = document.getElementById("progress");
+const time = document.getElementById("time");
+const volume = document.getElementById("volume");
+const muteBtn = document.getElementById("muteBtn");
+const speed = document.getElementById("speed");
+const message = document.getElementById("message");
 
-  function formatTime(seconds) {
-    if (!Number.isFinite(seconds)) return "00:00";
-    const m = Math.floor(seconds / 60);
-    const s = Math.floor(seconds % 60);
-    return String(m).padStart(2, "0") + ":" +
-           String(s).padStart(2, "0");
+function formatTime(seconds) {
+  if (!Number.isFinite(seconds)) return "00:00";
+
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const secs = Math.floor(seconds % 60);
+
+  if (hours > 0) {
+    return String(hours).padStart(2, "0") + ":" +
+      String(minutes).padStart(2, "0") + ":" +
+      String(secs).padStart(2, "0");
   }
 
-  playBtn.onclick = async () => {
-    if (video.paused) {
-      try {
-        await video.play();
-      } catch (error) {
-        console.log("ไม่สามารถเล่นวิดีโอได้", error);
-      }
-    } else {
-      video.pause();
+  return String(minutes).padStart(2, "0") + ":" +
+    String(secs).padStart(2, "0");
+}
+
+function updateTime() {
+  const current = formatTime(video.currentTime);
+  const total = formatTime(video.duration);
+
+  time.textContent = current + " / " + total;
+
+  if (Number.isFinite(video.duration) && video.duration > 0) {
+    progress.value =
+      (video.currentTime / video.duration) * 1000;
+  }
+}
+
+function loadVideo() {
+  const url = urlInput.value.trim();
+
+  if (!url) {
+    message.textContent = "กรุณาใส่ URL วิดีโอก่อน";
+    return;
+  }
+
+  try {
+    const parsed = new URL(url);
+
+    if (!["http:", "https:"].includes(parsed.protocol)) {
+      throw new Error("URL ไม่ถูกต้อง");
     }
-  };
 
-  video.onplay = () => playBtn.textContent = "⏸ หยุดชั่วคราว";
-  video.onpause = () => playBtn.textContent = "▶ เล่น";
+    video.pause();
+    video.src = parsed.href;
+    video.load();
 
-  video.ontimeupdate = () => {
-    if (video.duration) {
-      progress.value =
-        (video.currentTime / video.duration) * 100;
-      current.textContent = formatTime(video.currentTime);
+    progress.value = 0;
+    time.textContent = "00:00 / 00:00";
+    playBtn.textContent = "▶";
+    message.textContent = "กำลังโหลดวิดีโอ...";
+
+    video.play().catch(() => {
+      message.textContent =
+        "โหลด URL แล้ว กดปุ่ม ▶ เพื่อเริ่มเล่น";
+    });
+
+  } catch (error) {
+    message.textContent = "URL ไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง";
+  }
+}
+
+loadBtn.addEventListener("click", loadVideo);
+
+urlInput.addEventListener("keydown", event => {
+  if (event.key === "Enter") loadVideo();
+});
+
+playBtn.addEventListener("click", async () => {
+  if (video.paused) {
+    try {
+      await video.play();
+    } catch (error) {
+      message.textContent =
+        "เล่นไม่ได้ กรุณาตรวจสอบ URL และรูปแบบวิดีโอ";
     }
-  };
+  } else {
+    video.pause();
+  }
+});
 
-  video.onloadedmetadata = () => {
-    duration.textContent = formatTime(video.duration);
-  };
+video.addEventListener("play", () => {
+  playBtn.textContent = "⏸";
+  message.textContent = "กำลังเล่นวิดีโอ";
+});
 
-  progress.oninput = () => {
-    if (video.duration) {
-      video.currentTime =
-        (progress.value / 100) * video.duration;
-    }
-  };
+video.addEventListener("pause", () => {
+  playBtn.textContent = "▶";
+});
 
-  volume.oninput = () => {
-    video.volume = Number(volume.value);
-    video.muted = false;
-    muteBtn.textContent = video.volume === 0 ? "🔇" : "🔊";
-  };
+video.addEventListener("timeupdate", updateTime);
+video.addEventListener("loadedmetadata", updateTime);
+video.addEventListener("durationchange", updateTime);
 
-  muteBtn.onclick = () => {
-    video.muted = !video.muted;
-    muteBtn.textContent = video.muted ? "🔇" : "🔊";
-  };
+video.addEventListener("ended", () => {
+  playBtn.textContent = "▶";
+  message.textContent = "เล่นวิดีโอจบแล้ว";
+});
 
-  document.getElementById("fullBtn").onclick = () => {
-    if (video.requestFullscreen) {
-      video.requestFullscreen();
+video.addEventListener("error", () => {
+  if (video.currentSrc) {
+    message.textContent =
+      "ไม่สามารถเล่นวิดีโอได้ ตรวจสอบลิงก์ การเข้าถึง และรูปแบบไฟล์";
+  }
+});
+
+progress.addEventListener("input", () => {
+  if (Number.isFinite(video.duration) && video.duration > 0) {
+    video.currentTime =
+      (Number(progress.value) / 1000) * video.duration;
+  }
+});
+
+document.getElementById("backBtn").addEventListener("click", () => {
+  if (Number.isFinite(video.duration)) {
+    video.currentTime = Math.max(0, video.currentTime - 10);
+  }
+});
+
+document.getElementById("forwardBtn").addEventListener("click", () => {
+  if (Number.isFinite(video.duration)) {
+    video.currentTime =
+      Math.min(video.duration, video.currentTime + 10);
+  }
+});
+
+volume.addEventListener("input", () => {
+  video.volume = Number(volume.value);
+  video.muted = video.volume === 0;
+  updateMuteButton();
+});
+
+muteBtn.addEventListener("click", () => {
+  video.muted = !video.muted;
+
+  if (!video.muted && video.volume === 0) {
+    video.volume = 0.5;
+    volume.value = 0.5;
+  }
+
+  updateMuteButton();
+});
+
+function updateMuteButton() {
+  muteBtn.textContent =
+    video.muted || video.volume === 0 ? "🔇" : "🔊";
+}
+
+speed.addEventListener("change", () => {
+  video.playbackRate = Number(speed.value);
+});
+
+document.getElementById("fullBtn").addEventListener("click", async () => {
+  try {
+    if (document.fullscreenElement) {
+      await document.exitFullscreen();
+    } else if (player.requestFullscreen) {
+      await player.requestFullscreen();
     } else if (video.webkitEnterFullscreen) {
       video.webkitEnterFullscreen();
     }
-  };
-
-  document.getElementById("fileInput").onchange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      video.src = URL.createObjectURL(file);
-      video.load();
-      video.play().catch(() => {});
-    }
-  };
+  } catch (error) {
+    message.textContent = "อุปกรณ์ไม่รองรับการแสดงเต็มหน้าจอ";
+  }
+});
 </script>
 
 </body>
-    </html>
+  </html>
