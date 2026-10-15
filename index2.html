@@ -1,0 +1,278 @@
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ตารางจัดการงาน</title>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  padding: 16px;
+  font-family: Arial, sans-serif;
+  background: #f3f6fa;
+  color: #243247;
+}
+.container {
+  max-width: 1200px;
+  margin: auto;
+}
+h2 { color: #167447; }
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+input, select, button {
+  padding: 10px;
+  border: 1px solid #d1d9e2;
+  border-radius: 6px;
+  font-size: 14px;
+}
+button {
+  cursor: pointer;
+  border: none;
+  background: #168653;
+  color: white;
+}
+button.delete { background: #dc3545; }
+button.export { background: #1769aa; }
+.table-wrap {
+  overflow-x: auto;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px #00000010;
+}
+table {
+  width: 100%;
+  min-width: 850px;
+  border-collapse: collapse;
+}
+th, td {
+  border: 1px solid #dce3e9;
+  padding: 8px;
+  text-align: left;
+}
+th {
+  background: #168653;
+  color: white;
+}
+td input, td select {
+  width: 100%;
+  min-width: 100px;
+}
+.stats {
+  margin: 14px 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.stat {
+  background: white;
+  padding: 14px;
+  border-radius: 8px;
+  flex: 1;
+  min-width: 120px;
+}
+.stat strong { color: #168653; font-size: 22px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h2>📋 ตารางจัดการงาน</h2>
+
+  <div class="stats">
+    <div class="stat">งานทั้งหมด<br><strong id="total">0</strong></div>
+    <div class="stat">งานที่เสร็จแล้ว<br><strong id="done">0</strong></div>
+    <div class="stat">งานที่กำลังทำ<br><strong id="doing">0</strong></div>
+  </div>
+
+  <div class="toolbar">
+    <button onclick="addRow()">＋ เพิ่มงาน</button>
+    <button class="export" onclick="exportCSV()">📥 ส่งออก Excel (CSV)</button>
+    <input id="search" placeholder="ค้นหางาน..." oninput="renderFilter()">
+  </div>
+
+  <div class="table-wrap">
+    <table id="workTable">
+      <thead>
+        <tr>
+          <th>ลำดับ</th>
+          <th>วันที่</th>
+          <th>ชื่องาน</th>
+          <th>ผู้รับผิดชอบ</th>
+          <th>เวลา</th>
+          <th>สถานะ</th>
+          <th>หมายเหตุ</th>
+          <th>จัดการ</th>
+        </tr>
+      </thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </div>
+  <p>💾 ข้อมูลจะบันทึกอัตโนมัติในเบราว์เซอร์เครื่องนี้</p>
+</div>
+
+<script>
+const STORAGE_KEY = "work_schedule_v1";
+let jobs = [];
+
+try {
+  jobs = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+  if (!Array.isArray(jobs)) jobs = [];
+} catch {
+  jobs = [];
+}
+
+if (jobs.length === 0) {
+  jobs = [{
+    date: new Date().toISOString().slice(0,10),
+    task: "ตัวอย่างงาน",
+    person: "",
+    time: "09:00",
+    status: "กำลังทำ",
+    note: ""
+  }];
+}
+
+function save() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(jobs));
+  updateStats();
+}
+
+function updateStats() {
+  document.getElementById("total").textContent = jobs.length;
+  document.getElementById("done").textContent =
+    jobs.filter(j => j.status === "เสร็จแล้ว").length;
+  document.getElementById("doing").textContent =
+    jobs.filter(j => j.status === "กำลังทำ").length;
+}
+
+function addRow() {
+  jobs.push({
+    date: new Date().toISOString().slice(0,10),
+    task: "",
+    person: "",
+    time: "09:00",
+    status: "รอดำเนินการ",
+    note: ""
+  });
+  save();
+  render();
+}
+
+function updateJob(index, key, value) {
+  jobs[index][key] = value;
+  save();
+}
+
+function removeJob(index) {
+  if (confirm("ต้องการลบงานนี้หรือไม่?")) {
+    jobs.splice(index, 1);
+    save();
+    render();
+  }
+}
+
+function renderFilter() {
+  render();
+}
+
+function render() {
+  const tbody = document.getElementById("rows");
+  const q = document.getElementById("search").value.toLowerCase();
+  tbody.replaceChildren();
+
+  jobs.forEach((job, i) => {
+    const searchable = Object.values(job).join(" ").toLowerCase();
+    if (!searchable.includes(q)) return;
+
+    const tr = document.createElement("tr");
+    const number = document.createElement("td");
+    number.textContent = i + 1;
+    tr.appendChild(number);
+
+    function inputCell(key, type = "text") {
+      const td = document.createElement("td");
+      const input = document.createElement("input");
+      input.type = type;
+      input.value = job[key] || "";
+      input.addEventListener("change", () =>
+        updateJob(i, key, input.value)
+      );
+      td.appendChild(input);
+      tr.appendChild(td);
+    }
+
+    inputCell("date", "date");
+    inputCell("task");
+    inputCell("person");
+    inputCell("time", "time");
+
+    const statusCell = document.createElement("td");
+    const select = document.createElement("select");
+    ["รอดำเนินการ", "กำลังทำ", "เสร็จแล้ว"].forEach(status => {
+      const option = document.createElement("option");
+      option.value = status;
+      option.textContent = status;
+      select.appendChild(option);
+    });
+    select.value = job.status || "รอดำเนินการ";
+    select.addEventListener("change", () =>
+      updateJob(i, "status", select.value)
+    );
+    statusCell.appendChild(select);
+    tr.appendChild(statusCell);
+
+    inputCell("note");
+
+    const actionCell = document.createElement("td");
+    const del = document.createElement("button");
+    del.textContent = "ลบ";
+    del.className = "delete";
+    del.onclick = () => removeJob(i);
+    actionCell.appendChild(del);
+    tr.appendChild(actionCell);
+
+    tbody.appendChild(tr);
+  });
+
+  updateStats();
+}
+
+function exportCSV() {
+  const headers = [
+    "ลำดับ", "วันที่", "ชื่องาน", "ผู้รับผิดชอบ",
+    "เวลา", "สถานะ", "หมายเหตุ"
+  ];
+  const escapeCSV = value =>
+    '"' + String(value ?? "").replace(/"/g, '""') + '"';
+
+  const data = [
+    headers,
+    ...jobs.map((j, i) => [
+      i + 1, j.date, j.task, j.person,
+      j.time, j.status, j.note
+    ])
+  ];
+
+  const csv = "\uFEFF" +
+    data.map(row => row.map(escapeCSV).join(",")).join("\r\n");
+  const blob = new Blob([csv], {
+    type: "text/csv;charset=utf-8;"
+  });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "ตารางงาน.csv";
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+save();
+render();
+</script>
+</body>
+</html>
