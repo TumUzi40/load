@@ -4,198 +4,283 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Video Player</title>
+<meta name="theme-color" content="#101014">
+<title>SIAM MOVIE | เว็บดูหนังออนไลน์</title>
 
 <style>
 * {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 body {
-  margin: 0;
-  padding: 16px;
-  background: #f1f1f1;
-  color: #111;
-  font-family: Arial, sans-serif;
+  font-family: Arial, Tahoma, sans-serif;
+  background: #101014;
+  color: #fff;
 }
 
-.container {
-  width: 100%;
-  max-width: 900px;
-  margin: 20px auto;
-}
-
-.header {
+header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: rgba(16,16,20,.96);
+  padding: 16px 5%;
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 18px;
-}
-
-.logo {
-  background: #ff0000;
-  color: white;
-  border-radius: 8px;
-  padding: 8px 12px;
-  font-weight: bold;
-}
-
-.header h2 {
-  margin: 0;
-  font-size: 21px;
-}
-
-.url-box {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 14px;
-}
-
-.url-box input {
-  min-width: 0;
-  flex: 1;
-  padding: 12px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 15px;
-}
-
-button {
-  border: none;
-  cursor: pointer;
-  font-size: 14px;
-}
-
-.load-btn {
-  padding: 12px 18px;
-  background: #ff0000;
-  color: white;
-  border-radius: 8px;
-  font-weight: bold;
-}
-
-.load-btn:hover {
-  background: #cc0000;
-}
-
-.player {
-  background: #000;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 4px 15px #0002;
-}
-
-.video-area {
-  position: relative;
-  background: #000;
-  aspect-ratio: 16 / 9;
-}
-
-video {
-  width: 100%;
-  height: 100%;
-  display: block;
-  object-fit: contain;
-  background: #000;
-}
-
-.controls {
-  padding: 10px 14px 12px;
-  color: white;
-  background: #181818;
-}
-
-.progress {
-  width: 100%;
-  height: 5px;
-  margin: 0 0 12px;
-  display: block;
-  accent-color: #ff0000;
-  cursor: pointer;
-}
-
-.control-row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+  gap: 16px;
   flex-wrap: wrap;
 }
 
-.control-btn {
-  background: transparent;
-  color: white;
-  padding: 6px 3px;
-  font-size: 18px;
-}
-
-.control-btn:hover {
-  color: #ff5252;
-}
-
-.time {
-  font-size: 12px;
-  color: #ddd;
+.logo {
+  font-size: 25px;
+  font-weight: bold;
+  color: #ff3030;
   white-space: nowrap;
 }
 
-.volume {
-  width: 75px;
-  accent-color: #ff0000;
-}
-
-.speed {
-  background: #333;
+.search {
+  background: #25252d;
+  border: 1px solid #393943;
   color: white;
-  padding: 7px;
-  border-radius: 5px;
+  padding: 11px 14px;
+  border-radius: 8px;
+  width: min(300px, 100%);
+  outline: none;
 }
 
-.spacer {
-  flex: 1;
+.search:focus {
+  border-color: #ff3030;
 }
 
-.message {
+.hero {
+  padding: 65px 6%;
+  min-height: 280px;
+  display: flex;
+  align-items: center;
+  background:
+    linear-gradient(90deg, #101014 5%, rgba(16,16,20,.8) 55%, transparent),
+    linear-gradient(0deg, #101014, transparent),
+    url("https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=1400&q=80")
+    center/cover;
+}
+
+.hero h1 {
+  font-size: clamp(30px, 5vw, 48px);
+  margin-bottom: 14px;
+}
+
+.hero p {
+  color: #d1d1d1;
+  max-width: 480px;
+  line-height: 1.7;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  border-radius: 6px;
+  padding: 11px 18px;
+  font-weight: bold;
+}
+
+.play-btn {
+  background: #ff3030;
+  color: white;
+  margin-top: 20px;
+}
+
+.play-btn:hover {
+  background: #d82020;
+}
+
+main {
+  padding: 10px 5% 45px;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 20px 0;
+}
+
+.toolbar h2 {
+  font-size: 23px;
+}
+
+select {
+  background: #25252d;
+  color: white;
+  border: 1px solid #393943;
+  padding: 10px;
+  border-radius: 6px;
+}
+
+.movie-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 20px 14px;
+}
+
+.movie {
+  background: #1c1c23;
+  border-radius: 9px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform .2s, box-shadow .2s;
+}
+
+.movie:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px #0008;
+}
+
+.poster {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+  display: block;
+  background: #292932;
+}
+
+.movie-info {
+  padding: 12px;
+}
+
+.movie-info h3 {
+  font-size: 15px;
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+.movie-info p {
+  color: #aaa;
+  font-size: 12px;
+}
+
+.tag {
+  display: inline-block;
+  color: #ff6464;
+  font-size: 12px;
+  margin-top: 8px;
+}
+
+.empty {
+  padding: 40px 0;
+  color: #aaa;
+  text-align: center;
+  grid-column: 1 / -1;
+}
+
+footer {
+  border-top: 1px solid #303038;
+  padding: 25px;
+  text-align: center;
+  color: #999;
   font-size: 13px;
-  color: #555;
-  margin-top: 12px;
-  overflow-wrap: anywhere;
 }
 
-@media (max-width: 480px) {
-  body {
-    padding: 8px;
+/* Video player modal */
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  background: rgba(0,0,0,.94);
+}
+
+.modal.active {
+  display: flex;
+}
+
+.player-box {
+  width: min(950px, 100%);
+}
+
+.player-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.player-header h2 {
+  font-size: 18px;
+}
+
+.close-btn {
+  background: #303038;
+  color: white;
+  font-size: 22px;
+  padding: 5px 12px;
+}
+
+#videoPlayer {
+  width: 100%;
+  max-height: 72vh;
+  background: #000;
+  aspect-ratio: 16 / 9;
+  display: block;
+}
+
+.player-note {
+  color: #aaa;
+  font-size: 13px;
+  line-height: 1.6;
+  margin-top: 12px;
+}
+
+@media (max-width: 900px) {
+  .movie-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  header {
+    padding: 13px 4%;
   }
 
-  .container {
-    margin-top: 10px;
+  .logo {
+    font-size: 22px;
   }
 
-  .header h2 {
-    font-size: 18px;
-  }
-
-  .url-box {
-    flex-direction: column;
-  }
-
-  .load-btn {
+  .search {
     width: 100%;
   }
 
-  .controls {
-    padding: 8px;
+  .hero {
+    min-height: 240px;
+    padding: 35px 5%;
   }
 
-  .control-row {
-    gap: 8px;
+  main {
+    padding: 10px 4% 35px;
   }
 
-  .volume {
-    width: 55px;
+  .movie-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px 10px;
   }
 
-  .control-btn {
-    font-size: 16px;
+  .movie-info {
+    padding: 9px;
+  }
+
+  .movie-info h3 {
+    font-size: 14px;
+  }
+
+  .modal {
+    padding: 10px;
   }
 }
 </style>
@@ -203,303 +288,258 @@ video {
 
 <body>
 
-<div class="container">
+<header>
+  <div class="logo">SIAM MOVIE</div>
+  <input
+    id="searchInput"
+    class="search"
+    type="search"
+    placeholder="ค้นหาหนัง..."
+    aria-label="ค้นหาหนัง"
+  >
+</header>
 
-  <div class="header">
-    <span class="logo">▶ VIDEO</span>
-    <h2>My Video Player</h2>
-  </div>
-
-  <div class="url-box">
-    <input
-      id="videoURL"
-      type="url"
-      placeholder="วาง URL วิดีโอ MP4 หรือ WebM"
-      aria-label="URL วิดีโอ"
-    >
-    <button class="load-btn" id="loadBtn">
-      โหลดวิดีโอ
+<section class="hero">
+  <div>
+    <h1>โลกแห่งความบันเทิง</h1>
+    <p>ค้นพบภาพยนตร์เรื่องโปรดของคุณ
+       เลือกหนังและรับชมได้ในหน้าเดียว</p>
+    <button class="play-btn" id="featuredBtn">
+      ▶ ดูตัวอย่าง
     </button>
   </div>
+</section>
 
-  <div class="player" id="player">
+<main>
+  <div class="toolbar">
+    <h2>🎬 หนังทั้งหมด</h2>
 
-    <div class="video-area">
-      <video
-        id="video"
-        playsinline
-        preload="metadata"
-        controlslist="nodownload"
-      >
-        เบราว์เซอร์ของคุณไม่รองรับวิดีโอ
-      </video>
-    </div>
-
-    <div class="controls">
-
-      <input
-        class="progress"
-        id="progress"
-        type="range"
-        min="0"
-        max="1000"
-        value="0"
-        step="1"
-        aria-label="ตำแหน่งวิดีโอ"
-      >
-
-      <div class="control-row">
-
-        <button
-          class="control-btn"
-          id="playBtn"
-          aria-label="เล่นวิดีโอ"
-          title="เล่น/หยุด"
-        >▶</button>
-
-        <button
-          class="control-btn"
-          id="backBtn"
-          title="ย้อนกลับ 10 วินาที"
-          aria-label="ย้อนกลับ"
-        >↶10</button>
-
-        <button
-          class="control-btn"
-          id="forwardBtn"
-          title="ข้ามไป 10 วินาที"
-          aria-label="ข้ามไปข้างหน้า"
-        >10↷</button>
-
-        <span class="time" id="time">00:00 / 00:00</span>
-
-        <span class="spacer"></span>
-
-        <button
-          class="control-btn"
-          id="muteBtn"
-          title="ปิด/เปิดเสียง"
-          aria-label="ปิดเสียง"
-        >🔊</button>
-
-        <input
-          class="volume"
-          id="volume"
-          type="range"
-          min="0"
-          max="1"
-          step="0.05"
-          value="1"
-          aria-label="ระดับเสียง"
-        >
-
-        <select class="speed" id="speed"
-                aria-label="ความเร็วการเล่น">
-          <option value="0.5">0.5x</option>
-          <option value="0.75">0.75x</option>
-          <option value="1" selected>1x</option>
-          <option value="1.25">1.25x</option>
-          <option value="1.5">1.5x</option>
-          <option value="2">2x</option>
-        </select>
-
-        <button
-          class="control-btn"
-          id="fullBtn"
-          title="เต็มหน้าจอ"
-          aria-label="เต็มหน้าจอ"
-        >⛶</button>
-
-      </div>
-    </div>
+    <select id="categoryFilter" aria-label="เลือกหมวดหมู่">
+      <option value="ทั้งหมด">ทุกหมวดหมู่</option>
+      <option value="แอ็กชัน">แอ็กชัน</option>
+      <option value="ผจญภัย">ผจญภัย</option>
+      <option value="ดราม่า">ดราม่า</option>
+      <option value="แอนิเมชัน">แอนิเมชัน</option>
+    </select>
   </div>
 
-  <p class="message" id="message">
-    วาง URL วิดีโอด้านบน แล้วกดโหลดวิดีโอ
-  </p>
+  <div id="movieGrid" class="movie-grid"></div>
+</main>
 
+<footer>
+  SIAM MOVIE — เว็บไซต์ตัวอย่างสำหรับรับชมวิดีโอ
+</footer>
+
+<!-- หน้าต่างเล่นวิดีโอ -->
+<div
+  id="playerModal"
+  class="modal"
+  role="dialog"
+  aria-modal="true"
+  aria-label="เครื่องเล่นวิดีโอ"
+>
+  <div class="player-box">
+    <div class="player-header">
+      <h2 id="playerTitle">กำลังเล่นวิดีโอ</h2>
+      <button class="close-btn" id="closePlayer"
+        aria-label="ปิดเครื่องเล่น">×</button>
+    </div>
+
+    <video id="videoPlayer" controls playsinline
+      preload="metadata">
+      เบราว์เซอร์ของคุณไม่รองรับวิดีโอ HTML5
+    </video>
+
+    <p class="player-note">
+      หากวิดีโอเล่นไม่ได้ ให้ตรวจสอบ URL และรูปแบบไฟล์
+      วิดีโอโดยตรงควรเป็นไฟล์ที่เบราว์เซอร์รองรับ เช่น MP4
+    </p>
+  </div>
 </div>
 
 <script>
-const video = document.getElementById("video");
-const player = document.getElementById("player");
-const urlInput = document.getElementById("videoURL");
-const loadBtn = document.getElementById("loadBtn");
-const playBtn = document.getElementById("playBtn");
-const progress = document.getElementById("progress");
-const time = document.getElementById("time");
-const volume = document.getElementById("volume");
-const muteBtn = document.getElementById("muteBtn");
-const speed = document.getElementById("speed");
-const message = document.getElementById("message");
-
-function formatTime(seconds) {
-  if (!Number.isFinite(seconds)) return "00:00";
-
-  const hours = Math.floor(seconds / 3600);
-  const minutes = Math.floor((seconds % 3600) / 60);
-  const secs = Math.floor(seconds % 60);
-
-  if (hours > 0) {
-    return String(hours).padStart(2, "0") + ":" +
-      String(minutes).padStart(2, "0") + ":" +
-      String(secs).padStart(2, "0");
+const movies = [
+  {
+    id: 1,
+    title: "ตัวอย่างหนังแอ็กชัน",
+    category: "แอ็กชัน",
+    year: 2025,
+    poster: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&w=500&q=80",
+    video: "https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+  },
+  {
+    id: 2,
+    title: "การผจญภัยครั้งใหม่",
+    category: "ผจญภัย",
+    year: 2025,
+    poster: "https://images.unsplash.com/photo-1478720568477-152d9b164e26?auto=format&fit=crop&w=500&q=80",
+    video: "https://storage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
+  },
+  {
+    id: 3,
+    title: "เรื่องราวแห่งความฝัน",
+    category: "ดราม่า",
+    year: 2024,
+    poster: "https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&w=500&q=80",
+    video: "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4"
+  },
+  {
+    id: 4,
+    title: "โลกแห่งแอนิเมชัน",
+    category: "แอนิเมชัน",
+    year: 2025,
+    poster: "https://images.unsplash.com/photo-1440404653325-ab127d49abc1?auto=format&fit=crop&w=500&q=80",
+    video: "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4"
+  },
+  {
+    id: 5,
+    title: "ภารกิจสุดระทึก",
+    category: "แอ็กชัน",
+    year: 2024,
+    poster: "https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?auto=format&fit=crop&w=500&q=80",
+    video: "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4"
+  },
+  {
+    id: 6,
+    title: "เดินทางสู่โลกกว้าง",
+    category: "ผจญภัย",
+    year: 2023,
+    poster: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=500&q=80",
+    video: "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4"
+  },
+  {
+    id: 7,
+    title: "คืนแห่งความทรงจำ",
+    category: "ดราม่า",
+    year: 2024,
+    poster: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=500&q=80",
+    video: "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4"
+  },
+  {
+    id: 8,
+    title: "เพื่อนรักผจญภัย",
+    category: "แอนิเมชัน",
+    year: 2025,
+    poster: "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?auto=format&fit=crop&w=500&q=80",
+    video: "https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
   }
+];
 
-  return String(minutes).padStart(2, "0") + ":" +
-    String(secs).padStart(2, "0");
-}
+const grid = document.getElementById("movieGrid");
+const searchInput = document.getElementById("searchInput");
+const categoryFilter = document.getElementById("categoryFilter");
+const modal = document.getElementById("playerModal");
+const videoPlayer = document.getElementById("videoPlayer");
+const playerTitle = document.getElementById("playerTitle");
 
-function updateTime() {
-  const current = formatTime(video.currentTime);
-  const total = formatTime(video.duration);
+function renderMovies() {
+  const keyword = searchInput.value.trim().toLowerCase();
+  const category = categoryFilter.value;
 
-  time.textContent = current + " / " + total;
+  const filtered = movies.filter(movie => {
+    const matchesName = movie.title.toLowerCase()
+      .includes(keyword);
+    const matchesCategory = category === "ทั้งหมด" ||
+      movie.category === category;
 
-  if (Number.isFinite(video.duration) && video.duration > 0) {
-    progress.value =
-      (video.currentTime / video.duration) * 1000;
-  }
-}
+    return matchesName && matchesCategory;
+  });
 
-function loadVideo() {
-  const url = urlInput.value.trim();
+  grid.replaceChildren();
 
-  if (!url) {
-    message.textContent = "กรุณาใส่ URL วิดีโอก่อน";
+  if (filtered.length === 0) {
+    const empty = document.createElement("p");
+    empty.className = "empty";
+    empty.textContent = "ไม่พบหนังที่คุณค้นหา";
+    grid.appendChild(empty);
     return;
   }
 
-  try {
-    const parsed = new URL(url);
+  filtered.forEach(movie => {
+    const card = document.createElement("article");
+    card.className = "movie";
+    card.tabIndex = 0;
+    card.setAttribute("role", "button");
+    card.setAttribute("aria-label", "ดู " + movie.title);
 
-    if (!["http:", "https:"].includes(parsed.protocol)) {
-      throw new Error("URL ไม่ถูกต้อง");
-    }
+    const poster = document.createElement("img");
+    poster.className = "poster";
+    poster.src = movie.poster;
+    poster.alt = movie.title;
+    poster.loading = "lazy";
 
-    video.pause();
-    video.src = parsed.href;
-    video.load();
+    const info = document.createElement("div");
+    info.className = "movie-info";
 
-    progress.value = 0;
-    time.textContent = "00:00 / 00:00";
-    playBtn.textContent = "▶";
-    message.textContent = "กำลังโหลดวิดีโอ...";
+    const title = document.createElement("h3");
+    title.textContent = movie.title;
 
-    video.play().catch(() => {
-      message.textContent =
-        "โหลด URL แล้ว กดปุ่ม ▶ เพื่อเริ่มเล่น";
+    const details = document.createElement("p");
+    details.textContent = movie.year + " • " + movie.category;
+
+    const tag = document.createElement("span");
+    tag.className = "tag";
+    tag.textContent = "▶ รับชมตัวอย่าง";
+
+    info.append(title, details, tag);
+    card.append(poster, info);
+
+    card.addEventListener("click", () => playMovie(movie));
+    card.addEventListener("keydown", event => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        playMovie(movie);
+      }
     });
 
-  } catch (error) {
-    message.textContent = "URL ไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง";
+    grid.appendChild(card);
+  });
+}
+
+function playMovie(movie) {
+  videoPlayer.pause();
+  videoPlayer.src = movie.video;
+  playerTitle.textContent = movie.title;
+  modal.classList.add("active");
+  document.body.style.overflow = "hidden";
+  videoPlayer.load();
+
+  const result = videoPlayer.play();
+  if (result && result.catch) {
+    result.catch(() => {
+      // ผู้ใช้สามารถกดปุ่มเล่นบนเครื่องเล่นได้
+    });
   }
 }
 
-loadBtn.addEventListener("click", loadVideo);
-
-urlInput.addEventListener("keydown", event => {
-  if (event.key === "Enter") loadVideo();
-});
-
-playBtn.addEventListener("click", async () => {
-  if (video.paused) {
-    try {
-      await video.play();
-    } catch (error) {
-      message.textContent =
-        "เล่นไม่ได้ กรุณาตรวจสอบ URL และรูปแบบวิดีโอ";
-    }
-  } else {
-    video.pause();
-  }
-});
-
-video.addEventListener("play", () => {
-  playBtn.textContent = "⏸";
-  message.textContent = "กำลังเล่นวิดีโอ";
-});
-
-video.addEventListener("pause", () => {
-  playBtn.textContent = "▶";
-});
-
-video.addEventListener("timeupdate", updateTime);
-video.addEventListener("loadedmetadata", updateTime);
-video.addEventListener("durationchange", updateTime);
-
-video.addEventListener("ended", () => {
-  playBtn.textContent = "▶";
-  message.textContent = "เล่นวิดีโอจบแล้ว";
-});
-
-video.addEventListener("error", () => {
-  if (video.currentSrc) {
-    message.textContent =
-      "ไม่สามารถเล่นวิดีโอได้ ตรวจสอบลิงก์ การเข้าถึง และรูปแบบไฟล์";
-  }
-});
-
-progress.addEventListener("input", () => {
-  if (Number.isFinite(video.duration) && video.duration > 0) {
-    video.currentTime =
-      (Number(progress.value) / 1000) * video.duration;
-  }
-});
-
-document.getElementById("backBtn").addEventListener("click", () => {
-  if (Number.isFinite(video.duration)) {
-    video.currentTime = Math.max(0, video.currentTime - 10);
-  }
-});
-
-document.getElementById("forwardBtn").addEventListener("click", () => {
-  if (Number.isFinite(video.duration)) {
-    video.currentTime =
-      Math.min(video.duration, video.currentTime + 10);
-  }
-});
-
-volume.addEventListener("input", () => {
-  video.volume = Number(volume.value);
-  video.muted = video.volume === 0;
-  updateMuteButton();
-});
-
-muteBtn.addEventListener("click", () => {
-  video.muted = !video.muted;
-
-  if (!video.muted && video.volume === 0) {
-    video.volume = 0.5;
-    volume.value = 0.5;
-  }
-
-  updateMuteButton();
-});
-
-function updateMuteButton() {
-  muteBtn.textContent =
-    video.muted || video.volume === 0 ? "🔇" : "🔊";
+function closePlayer() {
+  videoPlayer.pause();
+  videoPlayer.removeAttribute("src");
+  videoPlayer.load();
+  modal.classList.remove("active");
+  document.body.style.overflow = "";
 }
 
-speed.addEventListener("change", () => {
-  video.playbackRate = Number(speed.value);
+searchInput.addEventListener("input", renderMovies);
+categoryFilter.addEventListener("change", renderMovies);
+document.getElementById("closePlayer")
+  .addEventListener("click", closePlayer);
+
+document.getElementById("featuredBtn")
+  .addEventListener("click", () => playMovie(movies[0]));
+
+modal.addEventListener("click", event => {
+  if (event.target === modal) closePlayer();
 });
 
-document.getElementById("fullBtn").addEventListener("click", async () => {
-  try {
-    if (document.fullscreenElement) {
-      await document.exitFullscreen();
-    } else if (player.requestFullscreen) {
-      await player.requestFullscreen();
-    } else if (video.webkitEnterFullscreen) {
-      video.webkitEnterFullscreen();
-    }
-  } catch (error) {
-    message.textContent = "อุปกรณ์ไม่รองรับการแสดงเต็มหน้าจอ";
+document.addEventListener("keydown", event => {
+  if (event.key === "Escape" && modal.classList.contains("active")) {
+    closePlayer();
   }
 });
+
+renderMovies();
 </script>
 
 </body>
-  </html>
+</html>
