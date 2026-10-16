@@ -2,182 +2,253 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
+  <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ระบบตารางพักรถ</title>
+  <title>ระบบดูข้อมูลพักรถ</title>
+
   <style>
     * { box-sizing: border-box; }
 
     body {
       margin: 0;
-      padding: 20px;
-      font-family: Arial, sans-serif;
+      font-family: Arial, Tahoma, sans-serif;
       background: #f1f5f9;
-      color: #172033;
+      color: #1e293b;
+    }
+
+    header {
+      background: #14532d;
+      color: white;
+      padding: 22px 15px;
     }
 
     .container {
       max-width: 1100px;
       margin: auto;
+      padding: 16px 12px;
     }
 
-    h1 { font-size: 25px; }
+    header h2 {
+      margin: 0 0 6px;
+      font-size: 23px;
+    }
+
+    header p {
+      margin: 0;
+      font-size: 14px;
+    }
 
     .toolbar {
       display: flex;
       gap: 10px;
-      flex-wrap: wrap;
-      margin-bottom: 15px;
-    }
-
-    input, button {
-      padding: 12px;
-      border: 1px solid #cbd5e1;
-      border-radius: 8px;
-      font-size: 15px;
+      margin-bottom: 14px;
     }
 
     input {
       flex: 1;
-      min-width: 180px;
+      min-width: 0;
+      padding: 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 16px;
     }
 
     button {
-      background: #2563eb;
+      padding: 12px 15px;
+      background: #15803d;
       color: white;
+      border: 0;
+      border-radius: 8px;
+      font-size: 15px;
       cursor: pointer;
-      border: none;
     }
 
-    .table-wrap {
-      overflow-x: auto;
+    .count, .panel {
       background: white;
       border-radius: 10px;
-      box-shadow: 0 2px 10px #0000000a;
+      margin-bottom: 12px;
+    }
+
+    .count {
+      padding: 14px;
+      font-size: 14px;
+    }
+
+    .panel { overflow: hidden; }
+
+    .scroll {
+      overflow-x: auto;
     }
 
     table {
-      width: 100%;
       border-collapse: collapse;
-      min-width: 600px;
+      width: 100%;
+      min-width: 680px;
     }
 
     th, td {
-      padding: 14px;
-      border-bottom: 1px solid #e2e8f0;
       text-align: left;
+      padding: 13px 12px;
+      border-bottom: 1px solid #e2e8f0;
+      font-size: 14px;
       white-space: nowrap;
     }
 
     th {
-      background: #1e293b;
-      color: white;
+      background: #dcfce7;
+      color: #14532d;
     }
 
-    .status {
-      display: inline-block;
-      padding: 5px 9px;
-      border-radius: 20px;
-      background: #dbeafe;
-      color: #1d4ed8;
+    .plate {
+      font-weight: bold;
+      color: #166534;
     }
 
-    #message { margin: 12px 0; color: #475569; }
+    #status {
+      padding: 20px 12px;
+      text-align: center;
+      color: #64748b;
+      white-space: pre-wrap;
+    }
+
+    #status.error {
+      color: #b91c1c;
+    }
 
     @media (max-width: 600px) {
-      body { padding: 12px; }
-      h1 { font-size: 21px; }
+      header h2 { font-size: 20px; }
+      .toolbar { flex-direction: column; }
+      button { width: 100%; }
     }
   </style>
 </head>
+
 <body>
+  <header>
+    <div class="container">
+      <h2>🚚 ระบบดูข้อมูลพักรถ</h2>
+      <p>ตรวจสอบทะเบียนรถ คนขับ จุดพัก และเวลาเข้า–ออก</p>
+    </div>
+  </header>
+
   <main class="container">
-    <h1>🚚 ระบบตารางพักรถ</h1>
-    <p>ข้อมูลจาก Google Sheets</p>
-
     <div class="toolbar">
-      <input id="search" placeholder="ค้นหาทะเบียนรถหรือคนขับ..."
-             oninput="renderTable()">
-      <button onclick="loadData()">รีเฟรชข้อมูล</button>
+      <input id="search" type="search"
+        placeholder="ค้นหาทะเบียนรถ ชื่อคนขับ หรือจุดพักรถ">
+      <button id="refresh" onclick="loadData()">↻ รีเฟรช</button>
     </div>
 
-    <div id="message">กำลังโหลดข้อมูล...</div>
+    <div class="count" id="count">กำลังโหลดข้อมูล...</div>
 
-    <div class="table-wrap">
-      <table>
-        <thead id="thead"></thead>
-        <tbody id="tbody"></tbody>
-      </table>
-    </div>
+    <section class="panel">
+      <div class="scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>ทะเบียนรถ</th>
+              <th>ชื่อคนขับ</th>
+              <th>จุดพักรถ</th>
+              <th>เวลาเข้า</th>
+              <th>เวลาออก</th>
+            </tr>
+          </thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+      <div id="status">กำลังเชื่อมต่อ Google Sheets...</div>
+    </section>
+
+    <div id="updated" style="font-size:12px;color:#64748b"></div>
   </main>
 
   <script>
-    let records = [];
+    let dataRows = [];
+
+    const search = document.getElementById('search');
+    const tbody = document.getElementById('rows');
+    const status = document.getElementById('status');
+    const refresh = document.getElementById('refresh');
 
     function loadData() {
-      document.getElementById('message').textContent =
-        'กำลังโหลดข้อมูล...';
+      refresh.disabled = true;
+      status.className = '';
+      status.hidden = false;
+      status.textContent = 'กำลังโหลดข้อมูล...';
 
       google.script.run
-        .withSuccessHandler(data => {
-          records = data || [];
-          renderTable();
-          document.getElementById('message').textContent =
-            'พบข้อมูล ' + records.length + ' รายการ';
+        .withSuccessHandler(result => {
+          dataRows = result.rows || [];
+          renderRows();
+
+          document.getElementById('updated').textContent =
+            'อัปเดตล่าสุด: ' +
+            new Date(result.updatedAt).toLocaleString('th-TH');
+
+          refresh.disabled = false;
         })
         .withFailureHandler(error => {
-          document.getElementById('message').textContent =
-            'โหลดข้อมูลไม่สำเร็จ: ' + error.message;
+          tbody.replaceChildren();
+          status.hidden = false;
+          status.className = 'error';
+          status.textContent =
+            'โหลดข้อมูลไม่สำเร็จ: ' +
+            (error.message || 'เกิดข้อผิดพลาด');
+
+          document.getElementById('count').textContent =
+            'ไม่สามารถโหลดข้อมูลได้';
+
+          refresh.disabled = false;
         })
-        .getRestData();
+        .getParkingData();
     }
 
-    function renderTable() {
-      const query = document.getElementById('search')
-        .value.toLowerCase().trim();
+    function addCell(tr, value, className) {
+      const td = document.createElement('td');
+      td.textContent = value || '-';
+      if (className) td.className = className;
+      tr.appendChild(td);
+    }
 
-      const filtered = records.filter(row =>
-        Object.values(row).some(value =>
-          String(value).toLowerCase().includes(query)
-        )
+    function renderRows() {
+      const q = search.value.trim().toLowerCase();
+
+      const filtered = dataRows.filter(row =>
+        [
+          row.plate, row.driver, row.location,
+          row.timeIn, row.timeOut
+        ].join(' ').toLowerCase().includes(q)
       );
 
-      const headers = records.length
-        ? Object.keys(records[0]) : [];
+      tbody.replaceChildren();
 
-      document.getElementById('thead').innerHTML =
-        '<tr>' + headers.map(h =>
-          '<th>' + escapeHtml(h) + '</th>'
-        ).join('') + '</tr>';
+      filtered.forEach(row => {
+        const tr = document.createElement('tr');
 
-      document.getElementById('tbody').innerHTML =
-        filtered.map(row => '<tr>' +
-          headers.map(h => {
-            const value = escapeHtml(row[h] || '');
-            return '<td>' +
-              (h === 'สถานะ'
-                ? '<span class="status">' + value + '</span>'
-                : value) +
-              '</td>';
-          }).join('') +
-        '</tr>').join('');
+        addCell(tr, row.plate, 'plate');
+        addCell(tr, row.driver);
+        addCell(tr, row.location);
+        addCell(tr, row.timeIn);
+        addCell(tr, row.timeOut);
+
+        tbody.appendChild(tr);
+      });
+
+      document.getElementById('count').textContent =
+        'พบ ' + filtered.length + ' รายการ จากทั้งหมด ' +
+        dataRows.length + ' รายการ';
+
+      status.hidden = filtered.length > 0;
 
       if (!filtered.length) {
-        document.getElementById('tbody').innerHTML =
-          '<tr><td colspan="' + Math.max(headers.length, 1) +
-          '">ไม่พบข้อมูล</td></tr>';
+        status.className = '';
+        status.textContent = dataRows.length
+          ? 'ไม่พบข้อมูลที่ค้นหา'
+          : 'ยังไม่มีข้อมูลพักรถ';
       }
     }
 
-    function escapeHtml(value) {
-      return String(value).replace(/[&<>"']/g, char => ({
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#39;'
-      })[char]);
-    }
+    search.addEventListener('input', renderRows);
 
     loadData();
   </script>
