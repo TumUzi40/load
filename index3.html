@@ -1,0 +1,185 @@
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ระบบตารางพักรถ</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      background: #f1f5f9;
+      color: #172033;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: auto;
+    }
+
+    h1 { font-size: 25px; }
+
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 15px;
+    }
+
+    input, button {
+      padding: 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 15px;
+    }
+
+    input {
+      flex: 1;
+      min-width: 180px;
+    }
+
+    button {
+      background: #2563eb;
+      color: white;
+      cursor: pointer;
+      border: none;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px #0000000a;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 600px;
+    }
+
+    th, td {
+      padding: 14px;
+      border-bottom: 1px solid #e2e8f0;
+      text-align: left;
+      white-space: nowrap;
+    }
+
+    th {
+      background: #1e293b;
+      color: white;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 5px 9px;
+      border-radius: 20px;
+      background: #dbeafe;
+      color: #1d4ed8;
+    }
+
+    #message { margin: 12px 0; color: #475569; }
+
+    @media (max-width: 600px) {
+      body { padding: 12px; }
+      h1 { font-size: 21px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <h1>🚚 ระบบตารางพักรถ</h1>
+    <p>ข้อมูลจาก Google Sheets</p>
+
+    <div class="toolbar">
+      <input id="search" placeholder="ค้นหาทะเบียนรถหรือคนขับ..."
+             oninput="renderTable()">
+      <button onclick="loadData()">รีเฟรชข้อมูล</button>
+    </div>
+
+    <div id="message">กำลังโหลดข้อมูล...</div>
+
+    <div class="table-wrap">
+      <table>
+        <thead id="thead"></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+  </main>
+
+  <script>
+    let records = [];
+
+    function loadData() {
+      document.getElementById('message').textContent =
+        'กำลังโหลดข้อมูล...';
+
+      google.script.run
+        .withSuccessHandler(data => {
+          records = data || [];
+          renderTable();
+          document.getElementById('message').textContent =
+            'พบข้อมูล ' + records.length + ' รายการ';
+        })
+        .withFailureHandler(error => {
+          document.getElementById('message').textContent =
+            'โหลดข้อมูลไม่สำเร็จ: ' + error.message;
+        })
+        .getRestData();
+    }
+
+    function renderTable() {
+      const query = document.getElementById('search')
+        .value.toLowerCase().trim();
+
+      const filtered = records.filter(row =>
+        Object.values(row).some(value =>
+          String(value).toLowerCase().includes(query)
+        )
+      );
+
+      const headers = records.length
+        ? Object.keys(records[0]) : [];
+
+      document.getElementById('thead').innerHTML =
+        '<tr>' + headers.map(h =>
+          '<th>' + escapeHtml(h) + '</th>'
+        ).join('') + '</tr>';
+
+      document.getElementById('tbody').innerHTML =
+        filtered.map(row => '<tr>' +
+          headers.map(h => {
+            const value = escapeHtml(row[h] || '');
+            return '<td>' +
+              (h === 'สถานะ'
+                ? '<span class="status">' + value + '</span>'
+                : value) +
+              '</td>';
+          }).join('') +
+        '</tr>').join('');
+
+      if (!filtered.length) {
+        document.getElementById('tbody').innerHTML =
+          '<tr><td colspan="' + Math.max(headers.length, 1) +
+          '">ไม่พบข้อมูล</td></tr>';
+      }
+    }
+
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>"']/g, char => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      })[char]);
+    }
+
+    loadData();
+  </script>
+</body>
+</html>
