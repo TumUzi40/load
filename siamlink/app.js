@@ -1,5 +1,5 @@
 /*
-  SIAMLINK MOVIE
+  TANOI VIP MOVIE
   เปลี่ยน title, category, poster, video, type และ description ตามข้อมูลจริงของคุณ
   type รองรับ "mp4" หรือ "m3u8"
 */
