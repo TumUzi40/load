@@ -38,7 +38,7 @@ const movies = [
   },
   {
     id: 4,
-    title: "หนังตลกของคุณ",
+    title: "siamlink,
     category: "ตลก",
     year: "2025",
     type: "mp4",
