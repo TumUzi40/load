@@ -12,7 +12,7 @@ const movies = [
     category: "สารคดี",
     year: "2026",
     type: "mp4",
-    poster: "https://placehold.co/480x720/252525/ffffff?text=DEMO+VIDEO",
+    poster: "https://raw.githubusercontent.com/TumUzi40/img/refs/heads/main/ChatGPT%20Image%2017%20%E0%B8%95.%E0%B8%84.%202569%2015_29_38.png",
     video: DEMO_MP4,
     description: "รายการนี้เป็นวิดีโอทดสอบสำหรับตรวจสอบว่าเครื่องเล่นทำงานได้"
   },
