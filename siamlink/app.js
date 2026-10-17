@@ -21,7 +21,7 @@ const movies = [
     title: "ภาพยนตร์แอ็กชันของคุณ",
     category: "แอ็กชัน",
     year: "2026",
-    type: "mp4",
+    type: "m3u8",
     poster: "https://raw.githubusercontent.com/TumUzi40/img2/refs/heads/main/1777541322782.jpg",
     video: "http://195.128.27.65:8080/live/play/VmpCMVEwdDVVVVpKT1hSSGJXSnBkbmRLZEVSSWVFbG9USEZoV0ZSV2FHOHhVVmhNUlVwblIwSXpPRDA9/813033",
     description: "เปลี่ยน URL ใน app.js เป็นไฟล์ MP4 ที่คุณมีสิทธิ์ใช้งาน"
