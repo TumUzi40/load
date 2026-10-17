@@ -32,13 +32,13 @@ const movies = [
     category: "ดราม่า",
     year: "2026",
     type: "m3u8",
-    poster: "https://placehold.co/480x720/252d3b/ffffff?text=HLS+M3U8",
-    video: "PASTE_YOUR_AUTHORIZED_M3U8_URL_HERE",
+    poster: "https://raw.githubusercontent.com/TumUzi40/img/refs/heads/main/SamuPro%20VPN_%20%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B9%80%E0%B8%8A%E0%B8%B7%E0%B9%88%E0%B8%AD%E0%B8%A1%E0%B8%95%E0%B9%88%E0%B8%AD%E0%B8%84%E0%B8%A7%E0%B8%B2%E0%B8%A1%E0%B9%80%E0%B8%A3%E0%B9%87%E0%B8%A7%E0%B8%AA%E0%B8%B9%E0%B8%87.png",
+    video: "https://drive.google.com/file/d/1Qwe3kUBCo2MQIzv3iezmcPj0v5uOngOV/view?usp=drivesdk",
     description: "ใส่ URL สตรีม HLS .m3u8 ที่ใช้งานได้และได้รับอนุญาต"
   },
 
   {
-    id: 5,
+    id: 4,
     title: "สารคดีของคุณ",
     category: "สารคดี",
     year: "2025",
