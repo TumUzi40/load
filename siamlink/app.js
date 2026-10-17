@@ -3,7 +3,7 @@
   เปลี่ยน title, category, poster, video, type และ description ตามข้อมูลจริงของคุณ
   type รองรับ "mp4" หรือ "m3u8"
 */
-const DEMO_MP4 = "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4";
+const DEMO_MP4 = "https://ezycdn.com/playlist-enmpstem-FHD.m3u8";
 
 const movies = [
   {
