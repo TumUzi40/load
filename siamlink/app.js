@@ -23,7 +23,7 @@ const movies = [
     year: "2026",
     type: "m3u8",
     poster: "https://raw.githubusercontent.com/TumUzi40/img2/refs/heads/main/1777541322782.jpg",
-    video: "http://195.128.27.65:8080/live/play/VmpCMVEwdDVVVVpKT1hSSGJXSnBkbmRLZEVSSWVFbG9USEZoV0ZSV2FHOHhVVmhNUlVwblIwSXpPRDA9/813033",
+    video: "http://tbtv.me:2095/play/live.php?mac=00:1A:79:E7:32:0C&stream=115620&extension=m3u8",
     description: "เปลี่ยน URL ใน app.js เป็นไฟล์ MP4 ที่คุณมีสิทธิ์ใช้งาน"
   },
   {
@@ -33,7 +33,7 @@ const movies = [
     year: "2026",
     type: "m3u8",
     poster: "https://raw.githubusercontent.com/TumUzi40/img2/refs/heads/main/1777541322782.jpg",
-    video: "https://ezycdn.com/playlist-fln6cot1-FHD.m3u8",
+    video: "http://tbtv.me:2095/play/live.php?mac=00:1A:79:E7:32:0C&stream=115620&extension=m3u8",
     description: "ใส่ URL สตรีม HLS .m3u8 ที่ใช้งานได้และได้รับอนุญาต"
   },
   {
