@@ -36,16 +36,7 @@ const movies = [
     video: "PASTE_YOUR_AUTHORIZED_M3U8_URL_HERE",
     description: "ใส่ URL สตรีม HLS .m3u8 ที่ใช้งานได้และได้รับอนุญาต"
   },
-  {
-    id: 4,
-    title: "หนังตลกของคุณ",
-    category: "ตลก",
-    year: "2025",
-    type: "mp4",
-    poster: "https://placehold.co/480x720/3b3020/ffffff?text=COMEDY",
-    video: "PASTE_YOUR_AUTHORIZED_MP4_URL_HERE",
-    description: "ใส่ลิงก์ MP4 ของคุณในช่อง video"
-  },
+
   {
     id: 5,
     title: "สารคดีของคุณ",
