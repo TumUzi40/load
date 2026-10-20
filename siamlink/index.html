@@ -1,75 +1,239 @@
-<!doctype html>
+
+<!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#101010">
-  <title>SIAMLINK MOVIE</title>
-  <link rel="stylesheet" href="style.css">
-  <!-- HLS.js: ใช้เล่น M3U8 ในเบราว์เซอร์ที่ไม่รองรับ HLS โดยตรง -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SIAMLINK TV ONLINE</title>
+
+  <!-- รองรับการเล่น M3U8 -->
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-  <script src="app.js" defer></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #101010;
+      color: white;
+      font-family: Arial, sans-serif;
+    }
+
+    header {
+      padding: 18px;
+      background: #080808;
+      border-bottom: 2px solid #e50914;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0;
+      color: #e50914;
+      font-size: 26px;
+    }
+
+    header p {
+      color: #bbb;
+      margin-bottom: 0;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: auto;
+      padding: 16px;
+    }
+
+    .player-box {
+      background: #1c1c1c;
+      border-radius: 12px;
+      padding: 12px;
+      overflow: hidden;
+    }
+
+    video {
+      display: block;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: black;
+      border-radius: 8px;
+    }
+
+    .status {
+      color: #ccc;
+      font-size: 14px;
+      margin: 12px 2px;
+    }
+
+    .controls {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    button {
+      padding: 12px 18px;
+      border: none;
+      border-radius: 6px;
+      background: #e50914;
+      color: white;
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #b20710;
+    }
+
+    .info {
+      margin-top: 20px;
+      padding: 16px;
+      background: #1b1b1b;
+      border-left: 4px solid #e50914;
+      border-radius: 6px;
+    }
+
+    .info h2 {
+      margin-top: 0;
+      font-size: 20px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #888;
+      font-size: 13px;
+    }
+  </style>
 </head>
+
 <body>
-  <header class="topbar">
-    <a class="brand" href="#" aria-label="SIAMLINK MOVIE หน้าแรก">SIAMLINK <span>MOVIE</span></a>
-    <label class="search-wrap">
-      <span aria-hidden="true">⌕</span>
-      <input id="searchInput" type="search" placeholder="ค้นหาหนัง ซีรีส์..." autocomplete="off" aria-label="ค้นหาหนัง">
-    </label>
+
+  <header>
+    <h1>SIAMLINK TV ONLINE</h1>
+    <p>ดูทีวีออนไลน์ ทุกที่ ทุกเวลา</p>
   </header>
 
-  <main>
-    <section class="hero" aria-labelledby="heroTitle">
-      <div class="hero-content">
-        <p class="eyebrow">SIAMLINK ORIGINALS</p>
-        <h1 id="heroTitle">เรื่องโปรดของคุณ<br>เริ่มต้นที่นี่</h1>
-        <p class="hero-copy">เลือกชมวิดีโอจากรายการของคุณ รองรับ MP4 และสตรีม HLS (M3U8)</p>
-        <button class="primary-btn" id="featuredPlay">▶ เล่นวิดีโอตัวอย่าง</button>
-      </div>
-      <div class="hero-shade"></div>
-    </section>
+  <main class="container">
 
-    <section class="player-section" id="playerSection" hidden>
-      <div class="section-heading">
-        <div>
-          <p class="eyebrow">NOW PLAYING</p>
-          <h2 id="playerTitle">กำลังเล่น</h2>
-        </div>
-        <button class="quiet-btn" id="closePlayer" type="button">ปิดเครื่องเล่น ✕</button>
-      </div>
-      <div class="video-frame">
-        <video id="videoPlayer" controls playsinline preload="metadata"></video>
-      </div>
-      <p id="playerMessage" class="player-message" role="status">เลือกปุ่มเล่นเพื่อเริ่มรับชม</p>
-      <p id="playerDescription" class="description"></p>
-    </section>
+    <div class="player-box">
+      <video id="video"
+             controls
+             autoplay
+             playsinline
+             preload="metadata">
+        เบราว์เซอร์ของคุณไม่รองรับวิดีโอ
+      </video>
 
-    <section class="catalog">
-      <div class="section-heading">
-        <div>
-          <p class="eyebrow">EXPLORE</p>
-          <h2>เลือกชมภาพยนตร์</h2>
-        </div>
-        <span id="resultCount" class="result-count"></span>
+      <div class="status" id="status">
+        กำลังเชื่อมต่อสตรีม...
       </div>
 
-      <nav class="filters" id="categoryFilters" aria-label="หมวดหมู่หนัง">
-        <button class="filter active" data-category="ทั้งหมด" type="button">ทั้งหมด</button>
-        <button class="filter" data-category="แอ็กชัน" type="button">แอ็กชัน</button>
-        <button class="filter" data-category="ดราม่า" type="button">ดราม่า</button>
-        <button class="filter" data-category="ตลก" type="button">ตลก</button>
-        <button class="filter" data-category="สารคดี" type="button">สารคดี</button>
-      </nav>
+      <div class="controls">
+        <button onclick="playVideo()">▶ เล่นวิดีโอ</button>
+        <button onclick="pauseVideo()">⏸ หยุดชั่วคราว</button>
+        <button onclick="reloadVideo()">↻ โหลดใหม่</button>
+      </div>
+    </div>
 
-      <div id="movieGrid" class="movie-grid"></div>
-      <p id="emptyState" class="empty-state" hidden>ไม่พบรายการที่ค้นหา ลองใช้คำอื่นหรือเลือกหมวดหมู่ทั้งหมด</p>
-    </section>
+    <div class="info">
+      <h2>📺 ช่องทีวีออนไลน์</h2>
+      <p>ระบบเล่นวิดีโอสตรีม M3U8</p>
+      <p>รองรับมือถือ Android และคอมพิวเตอร์</p>
+    </div>
+
   </main>
 
   <footer>
-    <strong>SIAMLINK MOVIE</strong>
-    <p>ใช้กับวิดีโอและสตรีมที่คุณเป็นเจ้าของหรือได้รับอนุญาตให้เผยแพร่เท่านั้น</p>
+    SIAMLINK TV ONLINE
   </footer>
+
+  <script>
+    const video = document.getElementById("video");
+    const statusText = document.getElementById("status");
+
+    // ลิงก์สตรีมที่คุณให้มา
+    const streamURL =
+      "http://tbtv.me:2095/play/live.php?mac=00:1A:79:E7:32:0C&stream=813033&extension=m3u8";
+
+    let hls = null;
+
+    function loadStream() {
+      if (hls) {
+        hls.destroy();
+        hls = null;
+      }
+
+      video.pause();
+      video.removeAttribute("src");
+      video.load();
+
+      statusText.textContent = "กำลังโหลดช่องทีวี...";
+
+      if (window.Hls && Hls.isSupported()) {
+        hls = new Hls();
+
+        hls.loadSource(streamURL);
+        hls.attachMedia(video);
+
+        hls.on(Hls.Events.MANIFEST_PARSED, function () {
+          statusText.textContent = "เชื่อมต่อแล้ว กดเล่นเพื่อรับชม";
+          video.play().catch(() => {
+            statusText.textContent =
+              "พร้อมเล่น กรุณากดปุ่มเล่นวิดีโอ";
+          });
+        });
+
+        hls.on(Hls.Events.ERROR, function (event, data) {
+          if (data.fatal) {
+            statusText.textContent =
+              "เล่นไม่ได้ กรุณาตรวจสอบลิงก์หรือเซิร์ฟเวอร์";
+
+            hls.destroy();
+            hls = null;
+          }
+        });
+
+      } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
+        video.src = streamURL;
+
+        video.addEventListener("loadedmetadata", function () {
+          statusText.textContent = "เชื่อมต่อแล้ว";
+        }, { once: true });
+
+        video.play().catch(() => {
+          statusText.textContent = "กรุณากดปุ่มเล่นวิดีโอ";
+        });
+
+      } else {
+        statusText.textContent =
+          "เบราว์เซอร์นี้ไม่รองรับการเล่น M3U8";
+      }
+    }
+
+    function playVideo() {
+      if (!video.src && !hls) {
+        loadStream();
+      }
+
+      video.play().catch(() => {
+        statusText.textContent =
+          "เล่นไม่ได้ กรุณาตรวจสอบสตรีม";
+      });
+    }
+
+    function pauseVideo() {
+      video.pause();
+    }
+
+    function reloadVideo() {
+      loadStream();
+    }
+
+    loadStream();
+  </script>
+
 </body>
-</html>
+  </html>
