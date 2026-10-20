@@ -2,238 +2,384 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SIAMLINK TV ONLINE</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SIAMLINK MOVIE</title>
 
-  <!-- รองรับการเล่น M3U8 -->
-  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+<style>
+* {
+  box-sizing: border-box;
+}
 
-    body {
-      margin: 0;
-      background: #101010;
-      color: white;
-      font-family: Arial, sans-serif;
-    }
+body {
+  margin: 0;
+  background: #101010;
+  color: white;
+  font-family: Arial, sans-serif;
+}
 
-    header {
-      padding: 18px;
-      background: #080808;
-      border-bottom: 2px solid #e50914;
-      text-align: center;
-    }
+header {
+  background: #181818;
+  padding: 18px;
+  border-bottom: 2px solid #e50914;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
 
-    header h1 {
-      margin: 0;
-      color: #e50914;
-      font-size: 26px;
-    }
+.logo {
+  color: #ff202b;
+  font-size: 23px;
+  font-weight: bold;
+}
 
-    header p {
-      color: #bbb;
-      margin-bottom: 0;
-    }
+header span {
+  font-size: 12px;
+  color: #bbb;
+}
 
-    .container {
-      max-width: 1000px;
-      margin: auto;
-      padding: 16px;
-    }
+.container {
+  max-width: 1100px;
+  margin: auto;
+  padding: 18px;
+}
 
-    .player-box {
-      background: #1c1c1c;
-      border-radius: 12px;
-      padding: 12px;
-      overflow: hidden;
-    }
+h2 {
+  font-size: 20px;
+}
 
-    video {
-      display: block;
-      width: 100%;
-      aspect-ratio: 16 / 9;
-      background: black;
-      border-radius: 8px;
-    }
+.player-box {
+  background: #000;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #333;
+}
 
-    .status {
-      color: #ccc;
-      font-size: 14px;
-      margin: 12px 2px;
-    }
+video {
+  width: 100%;
+  display: block;
+  aspect-ratio: 16 / 9;
+  background: #000;
+}
 
-    .controls {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 12px;
-    }
+.now-playing {
+  padding: 14px;
+  background: #1b1b1b;
+}
 
-    button {
-      padding: 12px 18px;
-      border: none;
-      border-radius: 6px;
-      background: #e50914;
-      color: white;
-      font-size: 15px;
-      cursor: pointer;
-    }
+.now-playing h2 {
+  margin: 0 0 8px;
+}
 
-    button:hover {
-      background: #b20710;
-    }
+.status {
+  color: #aaa;
+  font-size: 13px;
+}
 
-    .info {
-      margin-top: 20px;
-      padding: 16px;
-      background: #1b1b1b;
-      border-left: 4px solid #e50914;
-      border-radius: 6px;
-    }
+.controls {
+  margin-top: 18px;
+  padding: 16px;
+  background: #1c1c1c;
+  border-radius: 10px;
+}
 
-    .info h2 {
-      margin-top: 0;
-      font-size: 20px;
-    }
+input {
+  width: 100%;
+  padding: 13px;
+  margin: 8px 0;
+  border: 1px solid #444;
+  border-radius: 7px;
+  background: #101010;
+  color: white;
+  font-size: 14px;
+}
 
-    footer {
-      text-align: center;
-      padding: 20px;
-      color: #888;
-      font-size: 13px;
-    }
-  </style>
+button {
+  border: none;
+  padding: 12px 16px;
+  border-radius: 7px;
+  background: #e50914;
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
+  margin: 4px 2px;
+}
+
+button:hover {
+  background: #b80710;
+}
+
+.secondary {
+  background: #383838;
+}
+
+.movies {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.movie {
+  background: #202020;
+  border-radius: 9px;
+  padding: 12px;
+  cursor: pointer;
+  border: 1px solid #333;
+}
+
+.poster {
+  background: linear-gradient(135deg, #3a090d, #171717);
+  height: 95px;
+  border-radius: 6px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 32px;
+  margin-bottom: 9px;
+}
+
+.movie h3 {
+  font-size: 14px;
+  margin: 5px 0;
+}
+
+.movie p {
+  font-size: 12px;
+  color: #aaa;
+  margin: 4px 0;
+}
+
+footer {
+  padding: 25px;
+  text-align: center;
+  color: #888;
+  font-size: 12px;
+}
+
+@media (max-width: 600px) {
+  .container {
+    padding: 12px;
+  }
+
+  .movies {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .logo {
+    font-size: 19px;
+  }
+
+  button {
+    padding: 11px;
+  }
+}
+</style>
 </head>
 
 <body>
 
-  <header>
-    <h1>SIAMLINK TV ONLINE</h1>
-    <p>ดูทีวีออนไลน์ ทุกที่ ทุกเวลา</p>
-  </header>
+<header>
+  <div class="logo">SIAMLINK MOVIE</div>
+  <span>ONLINE PLAYER</span>
+</header>
 
-  <main class="container">
+<main class="container">
 
-    <div class="player-box">
-      <video id="video"
-             controls
-             autoplay
-             playsinline
-             preload="metadata">
-        เบราว์เซอร์ของคุณไม่รองรับวิดีโอ
-      </video>
+  <h2>🎬 รับชมภาพยนตร์ออนไลน์</h2>
 
-      <div class="status" id="status">
-        กำลังเชื่อมต่อสตรีม...
-      </div>
+  <div class="player-box">
+    <video id="video"
+      controls
+      playsinline
+      preload="metadata">
+      เบราว์เซอร์ของคุณไม่รองรับวิดีโอ
+    </video>
 
-      <div class="controls">
-        <button onclick="playVideo()">▶ เล่นวิดีโอ</button>
-        <button onclick="pauseVideo()">⏸ หยุดชั่วคราว</button>
-        <button onclick="reloadVideo()">↻ โหลดใหม่</button>
+    <div class="now-playing">
+      <h2 id="movieTitle">เลือกหนังเพื่อเริ่มรับชม</h2>
+      <div id="status" class="status">
+        พร้อมเล่นวิดีโอ
       </div>
     </div>
+  </div>
 
-    <div class="info">
-      <h2>📺 ช่องทีวีออนไลน์</h2>
-      <p>ระบบเล่นวิดีโอสตรีม M3U8</p>
-      <p>รองรับมือถือ Android และคอมพิวเตอร์</p>
+  <div class="controls">
+    <h2>🔗 ใส่ลิงก์หนัง</h2>
+
+    <input
+      id="videoUrl"
+      type="url"
+      placeholder="วาง URL ไฟล์ MP4 หรือ M3U8"
+      autocomplete="url">
+
+    <button onclick="playFromUrl()">▶ เล่นวิดีโอ</button>
+    <button class="secondary" onclick="stopVideo()">■ หยุดเล่น</button>
+
+    <p class="status">
+      รองรับ MP4 และ HLS/M3U8 ที่เซิร์ฟเวอร์อนุญาตให้เล่น
+    </p>
+  </div>
+
+  <h2>🍿 รายการตัวอย่าง</h2>
+
+  <div class="movies">
+
+    <div class="movie" onclick="playSample()">
+      <div class="poster">▶</div>
+      <h3>ตัวอย่างวิดีโอ</h3>
+      <p>ทดสอบระบบเล่นหนัง</p>
     </div>
 
-  </main>
+    <div class="movie"
+      onclick="selectUrl('MP4 ของคุณ', '')">
+      <div class="poster">🎬</div>
+      <h3>เพิ่มหนัง MP4</h3>
+      <p>ใส่ลิงก์หนังของคุณ</p>
+    </div>
 
-  <footer>
-    SIAMLINK TV ONLINE
-  </footer>
+    <div class="movie"
+      onclick="selectUrl('สตรีม M3U8', '')">
+      <div class="poster">📺</div>
+      <h3>เพิ่มช่องออนไลน์</h3>
+      <p>ใส่ลิงก์ M3U8 ของคุณ</p>
+    </div>
 
-  <script>
-    const video = document.getElementById("video");
-    const statusText = document.getElementById("status");
+  </div>
+</main>
 
-    // ลิงก์สตรีมที่คุณให้มา
-    const streamURL =
-      "http://tbtv.me:2095/play/live.php?mac=00:1A:79:E7:32:0C&stream=813033&extension=m3u8";
+<footer>
+  SIAMLINK MOVIE · Online Video Player
+</footer>
 
-    let hls = null;
+<script>
+const video = document.getElementById("video");
+const urlInput = document.getElementById("videoUrl");
+const statusText = document.getElementById("status");
+const titleText = document.getElementById("movieTitle");
 
-    function loadStream() {
-      if (hls) {
+let hls = null;
+
+function setStatus(message) {
+  statusText.textContent = message;
+}
+
+function selectUrl(title, url) {
+  titleText.textContent = title;
+  urlInput.value = url;
+  urlInput.focus();
+}
+
+function playFromUrl() {
+  const url = urlInput.value.trim();
+
+  if (!url) {
+    setStatus("กรุณาใส่ลิงก์วิดีโอก่อน");
+    return;
+  }
+
+  if (!/^https?:\/\//i.test(url)) {
+    setStatus("ลิงก์ต้องขึ้นต้นด้วย http:// หรือ https://");
+    return;
+  }
+
+  playVideo(url, "กำลังเล่นวิดีโอออนไลน์");
+}
+
+function playVideo(url, title) {
+  if (hls) {
+    hls.destroy();
+    hls = null;
+  }
+
+  video.pause();
+  video.removeAttribute("src");
+  video.load();
+
+  titleText.textContent = title;
+  setStatus("กำลังโหลดวิดีโอ...");
+
+  const isHls = /\.m3u8($|[?#])/i.test(url);
+
+  if (isHls && Hls.isSupported()) {
+    hls = new Hls();
+
+    hls.loadSource(url);
+    hls.attachMedia(video);
+
+    hls.on(Hls.Events.MANIFEST_PARSED, function() {
+      setStatus("โหลดสำเร็จ กำลังเริ่มเล่น");
+      video.play().catch(() => {
+        setStatus("กดปุ่ม ▶ บนเครื่องเล่นเพื่อเริ่มเล่น");
+      });
+    });
+
+    hls.on(Hls.Events.ERROR, function(event, data) {
+      if (data.fatal) {
+        setStatus(
+          "เล่นไม่ได้: ตรวจสอบลิงก์ การเชื่อมต่อ หรือสิทธิ์เข้าถึง"
+        );
         hls.destroy();
         hls = null;
       }
+    });
 
-      video.pause();
-      video.removeAttribute("src");
-      video.load();
+  } else if (
+    isHls &&
+    video.canPlayType("application/vnd.apple.mpegurl")
+  ) {
+    video.src = url;
+    video.play().catch(() => {
+      setStatus("กดปุ่มเล่นบนเครื่องเล่น");
+    });
 
-      statusText.textContent = "กำลังโหลดช่องทีวี...";
+  } else {
+    video.src = url;
+    video.play().catch(() => {
+      setStatus("กดปุ่มเล่น หรือรอให้วิดีโอโหลด");
+    });
+  }
+}
 
-      if (window.Hls && Hls.isSupported()) {
-        hls = new Hls();
+function playSample() {
+  const sample =
+    "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4";
 
-        hls.loadSource(streamURL);
-        hls.attachMedia(video);
+  urlInput.value = sample;
+  playVideo(sample, "ตัวอย่างวิดีโอ");
+}
 
-        hls.on(Hls.Events.MANIFEST_PARSED, function () {
-          statusText.textContent = "เชื่อมต่อแล้ว กดเล่นเพื่อรับชม";
-          video.play().catch(() => {
-            statusText.textContent =
-              "พร้อมเล่น กรุณากดปุ่มเล่นวิดีโอ";
-          });
-        });
+function stopVideo() {
+  video.pause();
+  video.removeAttribute("src");
 
-        hls.on(Hls.Events.ERROR, function (event, data) {
-          if (data.fatal) {
-            statusText.textContent =
-              "เล่นไม่ได้ กรุณาตรวจสอบลิงก์หรือเซิร์ฟเวอร์";
+  if (hls) {
+    hls.destroy();
+    hls = null;
+  }
 
-            hls.destroy();
-            hls = null;
-          }
-        });
+  video.load();
+  setStatus("หยุดเล่นแล้ว");
+  titleText.textContent = "เลือกหนังเพื่อเริ่มรับชม";
+}
 
-      } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
-        video.src = streamURL;
+video.addEventListener("playing", () => {
+  setStatus("กำลังเล่นวิดีโอ");
+});
 
-        video.addEventListener("loadedmetadata", function () {
-          statusText.textContent = "เชื่อมต่อแล้ว";
-        }, { once: true });
+video.addEventListener("waiting", () => {
+  setStatus("กำลังโหลดบัฟเฟอร์...");
+});
 
-        video.play().catch(() => {
-          statusText.textContent = "กรุณากดปุ่มเล่นวิดีโอ";
-        });
-
-      } else {
-        statusText.textContent =
-          "เบราว์เซอร์นี้ไม่รองรับการเล่น M3U8";
-      }
-    }
-
-    function playVideo() {
-      if (!video.src && !hls) {
-        loadStream();
-      }
-
-      video.play().catch(() => {
-        statusText.textContent =
-          "เล่นไม่ได้ กรุณาตรวจสอบสตรีม";
-      });
-    }
-
-    function pauseVideo() {
-      video.pause();
-    }
-
-    function reloadVideo() {
-      loadStream();
-    }
-
-    loadStream();
-  </script>
+video.addEventListener("error", () => {
+  setStatus(
+    "ไม่สามารถเล่นวิดีโอได้ ตรวจสอบ URL และการอนุญาตจากเซิร์ฟเวอร์"
+  );
+});
+</script>
 
 </body>
   </html>
