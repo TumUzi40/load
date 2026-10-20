@@ -3,7 +3,7 @@
   เปลี่ยน title, category, poster, video, type และ description ตามข้อมูลจริงของคุณ
   type รองรับ "mp4" หรือ "m3u8"
 */
-const DEMO_MP4 = "https://ezycdn.com/playlist-enmpstem-FHD.m3u8";
+const DEMO_MP4 = "http://tbtv.me:2095/play/live.php?mac=00:1A:79:E7:32:0C&stream=813033&extension=m3u8";
 
 const movies = [
   {
@@ -12,7 +12,7 @@ const movies = [
     category: "สารคดี",
     year: "2026",
     type: "mp4",
-    poster: "https://raw.githubusercontent.com/TumUzi40/img/refs/heads/main/ChatGPT%20Image%2017%20%E0%B8%95.%E0%B8%84.%202569%2015_29_38.png",
+    poster: "http://tbtv.me:2095/play/live.php?mac=00:1A:79:E7:32:0C&stream=813033&extension=m3u8",
     video: DEMO_MP4,
     description: "รายการนี้เป็นวิดีโอทดสอบสำหรับตรวจสอบว่าเครื่องเล่นทำงานได้"
   },
