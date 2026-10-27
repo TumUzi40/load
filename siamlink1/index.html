@@ -1,0 +1,59 @@
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SIAMFLIX - ดูหนังออนไลน์</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="navbar">
+  <a class="logo" href="#">SIAM<span>FLIX</span></a>
+  <nav>
+    <a href="#">หน้าแรก</a>
+    <a href="#movies">รายการหนัง</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <div>
+    <p class="tag">SIAMFLIX ORIGINAL</p>
+    <h1>โลกแห่งความบันเทิง<br><span>อยู่ที่นี่แล้ว</span></h1>
+    <p>เลือกชมภาพยนตร์ที่คุณชื่นชอบได้ทุกเวลา</p>
+    <a class="btn" href="#movies">▶ เลือกชมหนัง</a>
+  </div>
+</section>
+
+<main id="movies" class="container">
+  <h2>รายการหนัง</h2>
+
+  <div class="filters">
+    <input id="search" type="search" placeholder="ค้นหาชื่อหนัง...">
+    <select id="category">
+      <option value="all">ทุกหมวดหมู่</option>
+    </select>
+  </div>
+
+  <div id="movieList" class="movie-grid"></div>
+  <p id="empty" hidden>ไม่พบรายการหนัง</p>
+</main>
+
+<div id="playerModal" class="modal" hidden>
+  <div class="modal-content">
+    <div class="player-head">
+      <h3 id="movieTitle">กำลังเล่น</h3>
+      <button id="closePlayer">✕ ปิด</button>
+    </div>
+    <video id="videoPlayer" controls playsinline></video>
+    <p id="playerMessage"></p>
+  </div>
+</div>
+
+<footer>SIAMFLIX © 2026 | รับชมวิดีโอที่ได้รับอนุญาตให้เผยแพร่</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.17/dist/hls.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
