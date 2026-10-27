@@ -11,7 +11,7 @@ const MOVIES = [
     year: 2026,
     poster: "",
     type: "mp4",
-    url: "https://YOUR-DOMAIN.example/movie.mp4"
+    url: "https://tumuzi40.github.io/load/siamlink1/test720p.mp4"
   },
   {
     id: 2,
@@ -20,7 +20,7 @@ const MOVIES = [
     year: 2026,
     poster: "",
     type: "m3u8",
-    url: "https://YOUR-DOMAIN.example/playlist.m3u8"
+    url: "https://tumuzi40.github.io/load/siamlink1/test720p.mp4"
   }
 ];
 
