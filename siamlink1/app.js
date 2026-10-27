@@ -11,7 +11,7 @@ const MOVIES = [
     year: 2026,
     poster: "https://raw.githubusercontent.com/TumUzi40/img2/refs/heads/main/1777541322782.jpg",
     type: "mp4",
-    url: "https://tumuzi40.github.io/load/siamlink1/test720p.mp4"
+    url: "https://tumuzi40.github.io/load/siamlink1/clip1.mp4"
   },
   {
     id: 2,
@@ -20,7 +20,7 @@ const MOVIES = [
     year: 2026,
     poster: "https://raw.githubusercontent.com/TumUzi40/img2/refs/heads/main/1777541322782.jpg",
     type: "m3u8",
-    url: "https://tumuzi40.github.io/load/siamlink1/test720p.mp4"
+    url: "https://tumuzi40.github.io/load/siamlink1/clip1.mp4"
   }
 ];
 
