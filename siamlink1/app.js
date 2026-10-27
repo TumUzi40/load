@@ -16,10 +16,10 @@ const MOVIES = [
   {
     id: 2,
     title: "หนังตัวอย่าง273flix",
-    category: "แอ็กชัน",
+    category: "av thai",
     year: 2026,
     poster: "https://raw.githubusercontent.com/TumUzi40/img/refs/heads/main/Screenshot_20261027_134400_Telegram%20Gold.jpg",
-    type: "m3u8",
+    type: "mp4",
     url: "https://tumuzi40.github.io/load/siamlink1/clip1.mp4"
   }
 ];
