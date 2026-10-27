@@ -6,19 +6,19 @@
 const MOVIES = [
   {
     id: 1,
-    title: "หนังตัวอย่าง MP4",
+    title: "หนังตัวอย่าง273flix",
     category: "แนะนำ",
     year: 2026,
-    poster: "",
+    poster: "https://raw.githubusercontent.com/TumUzi40/img2/refs/heads/main/1777541322782.jpg",
     type: "mp4",
     url: "https://tumuzi40.github.io/load/siamlink1/test720p.mp4"
   },
   {
     id: 2,
-    title: "หนังตัวอย่าง M3U8",
+    title: "หนังตัวอย่าง273flix",
     category: "แอ็กชัน",
     year: 2026,
-    poster: "",
+    poster: "https://raw.githubusercontent.com/TumUzi40/img2/refs/heads/main/1777541322782.jpg",
     type: "m3u8",
     url: "https://tumuzi40.github.io/load/siamlink1/test720p.mp4"
   }
