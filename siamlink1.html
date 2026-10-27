@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#090909">
+<title>REDPLAY — 18+ Video Catalog</title>
+<style>
+:root{--bg:#090909;--panel:#151515;--red:#e50914;--text:#f7f7f7;--muted:#aaa}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+button,input,select{font:inherit}
+button{cursor:pointer}
+header{position:sticky;top:0;z-index:5;background:rgba(9,9,9,.94);backdrop-filter:blur(12px);border-bottom:1px solid #292929}
+.nav{max-width:1200px;margin:auto;padding:14px 20px;display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.logo{font-weight:900;font-size:1.5rem;letter-spacing:1px;color:var(--red)}
+.logo span{color:white}
+.search{flex:1;min-width:180px;background:#202020;color:white;border:1px solid #444;border-radius:8px;padding:11px 13px}
+select{background:#202020;color:white;border:1px solid #444;border-radius:8px;padding:10px}
+main{max-width:1200px;margin:auto;padding:22px 20px 50px}
+.hero{min-height:220px;border-radius:16px;padding:28px;display:flex;align-items:end;background:linear-gradient(90deg,rgba(0,0,0,.94),rgba(0,0,0,.35)),linear-gradient(135deg,#3c070b,#171717 55%,#510b10);border:1px solid #2c2020}
+.hero h1{margin:0 0 8px;font-size:clamp(1.7rem,4vw,2.8rem)}
+.hero p{max-width:600px;color:#ddd;line-height:1.6}
+.tag{display:inline-block;color:#fff;background:var(--red);font-size:.75rem;font-weight:800;padding:4px 8px;border-radius:4px}
+.section-head{display:flex;justify-content:space-between;align-items:center;margin:28px 0 14px;gap:12px}
+.section-head h2{font-size:1.2rem;margin:0}
+.muted{color:var(--muted);font-size:.9rem}
+.grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:16px}
+.movie{min-width:0;background:var(--panel);border:1px solid #252525;border-radius:10px;overflow:hidden;transition:transform .18s,border-color .18s}
+.movie:hover{transform:translateY(-3px);border-color:#6b2024}
+.poster{width:100%;aspect-ratio:2/3;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:12px;background:linear-gradient(145deg,var(--c1),var(--c2));position:relative}
+.poster:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.58),transparent 70%)}
+.poster .symbol{font-size:3rem;z-index:1}
+.poster strong{z-index:1;font-size:1rem;letter-spacing:.5px;text-shadow:0 2px 8px #000}
+.poster small{z-index:1;margin-top:5px;color:#eee}
+.movie-info{padding:11px}
+.movie-info h3{font-size:.95rem;margin:0 0 6px;overflow-wrap:anywhere}
+.movie-info p{margin:0 0 10px;color:var(--muted);font-size:.8rem}
+.watch{width:100%;border:0;border-radius:6px;padding:9px;background:var(--red);color:#fff;font-weight:700}
+.watch:hover,.primary:hover{background:#b80710}
+footer{border-top:1px solid #292929;color:#999;padding:20px;text-align:center;font-size:.82rem;line-height:1.7}
+.modal{position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.88);display:flex;align-items:center;justify-content:center;padding:18px}
+.dialog{width:min(760px,100%);max-height:94vh;overflow:auto;background:#171717;border:1px solid #393939;border-radius:14px;padding:22px;box-shadow:0 20px 80px #000}
+.dialog h2{margin-top:0}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.primary,.secondary{border:0;border-radius:7px;padding:11px 16px;font-weight:700}
+.primary{background:var(--red);color:white}
+.secondary{background:#333;color:white}
+.video-wrap{background:#000;border-radius:8px;overflow:hidden}
+video{width:100%;max-height:60vh;display:block;background:#000}
+.source-note{font-size:.82rem;color:#bbb;line-height:1.6}
+.empty{grid-column:1/-1;border:1px dashed #444;padding:30px;text-align:center;color:#aaa;border-radius:10px}
+.hidden{display:none!important}
+@media(max-width:900px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:560px){.nav{padding:12px}.search{order:3;flex-basis:100%}main{padding:16px 12px 35px}.hero{padding:20px;min-height:190px}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.movie-info{padding:9px}.poster .symbol{font-size:2.4rem}.dialog{padding:16px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="nav">
+    <div class="logo">RED<span>PLAY</span></div>
+    <input id="search" class="search" type="search" placeholder="ค้นหาชื่อเรื่อง..." aria-label="ค้นหาหนัง">
+    <select id="category" aria-label="เลือกหมวดหมู่">
+      <option value="all">ทุกหมวดหมู่</option>
+      <option value="drama">ดราม่า</option>
+      <option value="romance">โรแมนติก</option>
+      <option value="thriller">ระทึกขวัญ</option>
+      <option value="comedy">คอมเมดี้</option>
+    </select>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div>
+      <span class="tag">ผู้ใหญ่ 18+</span>
+      <h1>ค้นพบเรื่องโปรดของคุณ</h1>
+      <p>แคตตาล็อกวิดีโอที่จัดหมวดหมู่อย่างง่าย เลือกเรื่องเพื่อรับชมผ่านเครื่องเล่น MP4 หรือ M3U8</p>
+    </div>
+  </section>
+  <div class="section-head">
+    <h2>รายการวิดีโอ</h2>
+    <span id="count" class="muted"></span>
+  </div>
+  <section id="catalog" class="grid" aria-live="polite"></section>
+</main>
+<footer>
+  REDPLAY · ตัวอย่างเทมเพลตแคตตาล็อกวิดีโอ<br>
+  เผยแพร่เฉพาะวิดีโอที่คุณเป็นเจ้าของหรือได้รับอนุญาต และปฏิบัติตามกฎหมายในพื้นที่ของคุณ
+</footer>
+
+<!-- Age gate: เป็นเพียงการยืนยันด้วยตนเอง ไม่ใช่การตรวจสอบอายุจริง -->
+<div id="ageGate" class="modal" role="dialog" aria-modal="true" aria-labelledby="ageTitle">
+  <div class="dialog">
+    <span class="tag">18+ ONLY</span>
+    <h2 id="ageTitle">ยืนยันอายุก่อนเข้าเว็บไซต์</h2>
+    <p>เว็บไซต์ตัวอย่างนี้จัดทำสำหรับผู้ใหญ่เท่านั้น โปรดยืนยันว่าคุณมีอายุอย่างน้อย 18 ปีหรือถึงอายุบรรลุนิติภาวะตามกฎหมายในพื้นที่ของคุณ และการเข้าชมเนื้อหานี้ถูกกฎหมายสำหรับคุณ</p>
+    <p class="muted">การกดยืนยันจะบันทึกสถานะไว้ในเบราว์เซอร์เครื่องนี้ ระบบนี้ไม่ตรวจสอบตัวตนหรืออายุจริง</p>
+    <div class="actions">
+      <button id="confirmAge" class="primary">ฉันมีอายุถึงเกณฑ์และยอมรับ</button>
+      <button id="leaveSite" class="secondary">ออกจากเว็บไซต์</button>
+    </div>
+  </div>
+</div>
+
+<div id="playerModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="playerTitle">
+  <div class="dialog">
+    <div class="section-head" style="margin-top:0">
+      <h2 id="playerTitle">กำลังรับชม</h2>
+      <button id="closePlayer" class="secondary" aria-label="ปิดเครื่องเล่น">ปิด ✕</button>
+    </div>
+    <div class="video-wrap"><video id="video" controls playsinline preload="metadata"></video></div>
+    <p id="playerDescription" class="source-note"></p>
+    <p class="source-note">หากวิดีโอเล่นไม่ได้ ให้ตรวจสอบ URL, CORS, การรองรับ HLS และสิทธิ์การเข้าถึงไฟล์จากผู้ให้บริการ</p>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+<script>
+"use strict";
+
+/*
+ * เปลี่ยนข้อมูลตัวอย่างใน movies เป็นวิดีโอที่คุณมีสิทธิ์เผยแพร่
+ * type: "mp4" หรือ "m3u8"
+ * poster ใช้สีและข้อความแทนภาพเพื่อให้ไฟล์นี้ทำงานได้โดยไม่ต้องมีไฟล์ภาพเพิ่ม
+ */
+const movies = [
+  {id:1,title:"คืนที่ดาวเต็มฟ้า",category:"romance",label:"โรแมนติก",year:2025,type:"mp4",url:"https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",symbol:"✦",c1:"#51151e",c2:"#151515",description:"วิดีโอตัวอย่างสำหรับทดสอบเครื่องเล่น"},
+  {id:2,title:"เงาในความมืด",category:"thriller",label:"ระทึกขวัญ",year:2025,type:"mp4",url:"https://www.w3schools.com/html/mov_bbb.mp4",symbol:"◈",c1:"#1a2b3c",c2:"#090909",description:"วิดีโอตัวอย่างสำหรับทดสอบเครื่องเล่น"},
+  {id:3,title:"เรื่องราวของเรา",category:"drama",label:"ดราม่า",year:2024,type:"m3u8",url:"",symbol:"❖",c1:"#63301b",c2:"#1b1111",description:"ใส่ URL ไฟล์ M3U8 ที่ได้รับอนุญาตเพื่อทดสอบ"},
+  {id:4,title:"วันหยุดแสนสนุก",category:"comedy",label:"คอมเมดี้",year:2024,type:"mp4",url:"https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",symbol:"✺",c1:"#67521b",c2:"#19130b",description:"วิดีโอตัวอย่างสำหรับทดสอบเครื่องเล่น"},
+  {id:5,title:"ปลายทางของหัวใจ",category:"romance",label:"โรแมนติก",year:2023,type:"mp4",url:"https://www.w3schools.com/html/mov_bbb.mp4",symbol:"♡",c1:"#672331",c2:"#180d13",description:"วิดีโอตัวอย่างสำหรับทดสอบเครื่องเล่น"},
+  {id:6,title:"แฟ้มปริศนา",category:"thriller",label:"ระทึกขวัญ",year:2025,type:"m3u8",url:"",symbol:"⌘",c1:"#343434",c2:"#090909",description:"ใส่ URL ไฟล์ M3U8 ที่ได้รับอนุญาตเพื่อทดสอบ"}
+];
+
+const catalog = document.getElementById("catalog");
+const search = document.getElementById("search");
+const category = document.getElementById("category");
+const count = document.getElementById("count");
+const ageGate = document.getElementById("ageGate");
+const playerModal = document.getElementById("playerModal");
+const video = document.getElementById("video");
+const playerTitle = document.getElementById("playerTitle");
+const playerDescription = document.getElementById("playerDescription");
+let hls = null;
+
+function renderMovies(){
+  const term = search.value.trim().toLocaleLowerCase("th");
+  const selected = category.value;
+  const filtered = movies.filter(movie =>
+    movie.title.toLocaleLowerCase("th").includes(term) &&
+    (selected === "all" || movie.category === selected)
+  );
+  count.textContent = `${filtered.length} เรื่อง`;
+  catalog.replaceChildren();
+
+  if(!filtered.length){
+    const empty = document.createElement("div");
+    empty.className = "empty";
+    empty.textContent = "ไม่พบรายการที่ค้นหา";
+    catalog.appendChild(empty);
+    return;
+  }
+
+  filtered.forEach(movie => {
+    const card = document.createElement("article");
+    card.className = "movie";
+    const poster = document.createElement("div");
+    poster.className = "poster";
+    poster.style.setProperty("--c1", movie.c1);
+    poster.style.setProperty("--c2", movie.c2);
+
+    const symbol = document.createElement("span");
+    symbol.className = "symbol";
+    symbol.textContent = movie.symbol;
+    const title = document.createElement("strong");
+    title.textContent = movie.title;
+    const label = document.createElement("small");
+    label.textContent = `${movie.label} · ${movie.year}`;
+    poster.append(symbol,title,label);
+
+    const info = document.createElement("div");
+    info.className = "movie-info";
+    const h3 = document.createElement("h3");
+    h3.textContent = movie.title;
+    const p = document.createElement("p");
+    p.textContent = `${movie.type.toUpperCase()} · ${movie.label}`;
+    const button = document.createElement("button");
+    button.className = "watch";
+    button.textContent = "▶ รับชม";
+    button.addEventListener("click", () => openPlayer(movie));
+    info.append(h3,p,button);
+    card.append(poster,info);
+    catalog.appendChild(card);
+  });
+}
+
+function openPlayer(movie){
+  playerTitle.textContent = movie.title;
+  playerDescription.textContent = movie.description || "";
+  playerModal.classList.remove("hidden");
+  stopPlayer();
+
+  if(!movie.url){
+    playerDescription.textContent = "ยังไม่ได้ใส่ URL วิดีโอสำหรับรายการนี้ เปิดไฟล์ HTML แล้วแก้ค่า url ในข้อมูล movies";
+    return;
+  }
+
+  if(movie.type === "m3u8"){
+    if(video.canPlayType("application/vnd.apple.mpegurl")){
+      video.src = movie.url;
+      video.play().catch(()=>{});
+    }else if(window.Hls && Hls.isSupported()){
+      hls = new Hls();
+      hls.loadSource(movie.url);
+      hls.attachMedia(video);
+      hls.on(Hls.Events.MANIFEST_PARSED, () => video.play().catch(()=>{}));
+      hls.on(Hls.Events.ERROR, (_event,data) => {
+        if(data.fatal) playerDescription.textContent =
+          "เล่นวิดีโอไม่ได้ โปรดตรวจสอบ URL M3U8, CORS และการเข้าถึง segment จากเซิร์ฟเวอร์";
+      });
+    }else{
+      playerDescription.textContent = "เบราว์เซอร์นี้ไม่รองรับ HLS โดยตรง กรุณาใช้เบราว์เซอร์ที่รองรับหรือวิดีโอ MP4";
+    }
+  }else{
+    video.src = movie.url;
+    video.play().catch(()=>{});
+  }
+}
+
+function stopPlayer(){
+  if(hls){hls.destroy();hls=null;}
+  video.pause();
+  video.removeAttribute("src");
+  video.load();
+}
+function closePlayer(){
+  stopPlayer();
+  playerModal.classList.add("hidden");
+}
+search.addEventListener("input",renderMovies);
+category.addEventListener("change",renderMovies);
+document.getElementById("closePlayer").addEventListener("click",closePlayer);
+playerModal.addEventListener("click",event=>{
+  if(event.target === playerModal) closePlayer();
+});
+document.addEventListener("keydown",event=>{
+  if(event.key === "Escape" && !playerModal.classList.contains("hidden")) closePlayer();
+});
+
+document.getElementById("confirmAge").addEventListener("click",()=>{
+  try{localStorage.setItem("redplay_age_confirmed","yes");}catch(_){}
+  ageGate.classList.add("hidden");
+});
+document.getElementById("leaveSite").addEventListener("click",()=>{
+  ageGate.innerHTML = '<div class="dialog"><h2>ไม่สามารถเข้าเว็บไซต์ได้</h2><p>กรุณาปิดแท็บนี้หากคุณยังไม่ถึงเกณฑ์อายุที่กฎหมายกำหนด</p></div>';
+});
+try{
+  if(localStorage.getItem("redplay_age_confirmed")==="yes") ageGate.classList.add("hidden");
+}catch(_){}
+renderMovies();
+</script>
+</body>
+</html>
